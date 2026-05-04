@@ -59,6 +59,10 @@ module.exports = {
                     900: '#233143',
                     950: '#0D1C2D',
                 },
+                background: {
+                    100: '#051424',
+                    200: '#122131',
+                },
             },
             fontFamily: {
                 heading: ['SpaceGrotesk_700Bold', 'SpaceGrotesk_600SemiBold'],
