@@ -6,7 +6,7 @@ import { colors } from '@/constants/themes'
 
 export default function LoginHeader() {
     return (
-        <View className="w-full justify-center relative py-2 mt-10 bg-[#1A1C1E]">
+        <View className="w-full justify-center relative py-2 mt-10 bg-[#1A1C1E] border border-b-[#414755]">
             <View className="flex-row items-center justify-between px-4 py-2">
                 {/* LEFT SECTION */}
                 <View className="flex-row items-center flex-1">

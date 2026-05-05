@@ -63,6 +63,8 @@ module.exports = {
                     100: '#051424',
                     200: '#122131',
                 },
+                white: '#FFFFFF',
+                black: '#000000',
             },
             fontFamily: {
                 headingBold: [
@@ -73,6 +75,7 @@ module.exports = {
                 label: ['SpaceGrotesk_600SemiBold'],
                 body: ['Inter_400Regular'],
                 bodyMedium: ['Inter_500Medium'],
+                bodyBold: ['Inter_600SemiBold'],
             },
         },
     },
