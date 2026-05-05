@@ -9,10 +9,10 @@ export default function SignUpScreen() {
     return (
         <View className="flex-1 bg-background-100 p-4">
             <View className="w-full px-4 py-6 bg-background-200 border border-[#414755] mt-8">
-                <Text className="font-heading text-[12px] text-primary-200">
+                <Text className="font-headingBold text-[12px] text-primary-200">
                     SYSTEM_AUTH
                 </Text>
-                <Text className="font-heading text-[30px] text-neutral-100 ">
+                <Text className="font-headingBold text-[30px] text-neutral-100 ">
                     OPERATOR_REGISTRATION
                 </Text>
             </View>
@@ -36,7 +36,7 @@ export default function SignUpScreen() {
                         // value: formik.values.email,
                         autoCapitalize: 'none',
                     }}
-                    label="EMAIL"
+                    label="EMAIL_ADDRESS"
                     variant="email"
                 />
                 <SignUpTextInput
@@ -62,7 +62,7 @@ export default function SignUpScreen() {
                     variant="password"
                     secureTextEntry
                 />
-                <View className="flex-row items-start mb-6">
+                <View className="flex-row items-start mt-3 mb-6">
                     {/* CHECKBOX */}
                     <Checkbox
                         value={isChecked}
@@ -72,10 +72,10 @@ export default function SignUpScreen() {
 
                     {/* TEXT */}
                     <View className="ml-3 flex-1">
-                        <Text className="text-heading text-neutral-100 text-[11px]">
+                        <Text className="font-headingRegular text-neutral-100 text-[13px]">
                             AGREE_TO_SYSTEM_PROTOCOLS
                         </Text>
-                        <Text className="text-body text-[#8B90A0] text-[10px]">
+                        <Text className="text-body text-[#8B90A0] text-[12px]">
                             I confirm that I have reviewed the telemetry
                             guidelines and data privacy terms.
                         </Text>
@@ -83,19 +83,19 @@ export default function SignUpScreen() {
                 </View>
 
                 <View className="w-full">
-                    <ButtonText title="REGISTER_OPERATOR" />
+                    <ButtonText title="REGISTER_OPERATOR" isBold={true} />
                 </View>
 
                 <View className="w-full border-t border-[#414755] mb-6" />
 
                 <View className="w-full flex flex-row justify-center">
-                    <Text className="text-[11px] text-body text-[#8B90A0] mr-[5px]">
+                    <Text className="text-[13px] text-body text-[#8B90A0] mr-[5px]">
                         Already have an account?
                     </Text>
                     <TouchableOpacity
                     // onPress={() => navigation.navigate('Login')}
                     >
-                        <Text className="text-[11px] text-neutral-200 text-heading">
+                        <Text className="text-[13px] text-neutral-200 font-headingRegular">
                             Log In
                         </Text>
                     </TouchableOpacity>

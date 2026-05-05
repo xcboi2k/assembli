@@ -51,7 +51,7 @@ export default function SignUpTextInput({
                 <View className="flex-row items-center justify-between border border-[#414755] px-3 py-2 bg-background-200">
                     {/* LEFT */}
                     <View className="flex-row items-center">
-                        <Text className="ml-2 text-[12px] font-bold text-[#c1c6d7]">
+                        <Text className="text-[13px] font-headingBold text-[#c1c6d7]">
                             {label}
                         </Text>
                     </View>

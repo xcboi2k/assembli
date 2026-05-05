@@ -73,7 +73,7 @@ export default function CustomTextInput({
                     {/* LEFT LABEL */}
                     <Text
                         style={{ color: customLabelColor || '#c1c6d7' }}
-                        className="text-[16px] font-heading"
+                        className="text-[16px] font-headingRegular"
                     >
                         {customLabel}
                     </Text>

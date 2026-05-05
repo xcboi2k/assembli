@@ -65,7 +65,11 @@ module.exports = {
                 },
             },
             fontFamily: {
-                heading: ['SpaceGrotesk_700Bold', 'SpaceGrotesk_600SemiBold'],
+                headingBold: [
+                    'SpaceGrotesk_700Bold',
+                    'SpaceGrotesk_600SemiBold',
+                ],
+                headingRegular: ['SpaceGrotesk_400Regular'],
                 label: ['SpaceGrotesk_600SemiBold'],
                 body: ['Inter_400Regular'],
                 bodyMedium: ['Inter_500Medium'],
