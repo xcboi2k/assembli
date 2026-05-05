@@ -73,14 +73,14 @@ export default function CustomTextInput({
                     {/* LEFT LABEL */}
                     <Text
                         style={{ color: customLabelColor || '#c1c6d7' }}
-                        className="text-[16px] text-heading"
+                        className="text-[16px] font-heading"
                     >
                         {customLabel}
                     </Text>
 
                     {/* RIGHT LABEL */}
                     {rightLabel && (
-                        <Text className="text-[10px] text-body text-[#8B90A0]">
+                        <Text className="text-[10px] font-body text-[#8B90A0]">
                             {rightLabel}
                         </Text>
                     )}
