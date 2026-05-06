@@ -42,12 +42,12 @@ export default function CollectionItem({
     return (
         <View className="w-full mb-4">
             <View className="flex-row justify-between items-center bg-[#2D3339] p-2">
-                <Text className="text-[10px] text-primary-200 tracking-widest font-headingRegular">
+                <Text className="text-[11px] text-primary-200 tracking-widest font-headingRegular">
                     {header}
                 </Text>
 
                 <View className={`px-2 py-1 ${styles.badge}`}>
-                    <Text className="text-[10px] text-neutral-50 font-label">
+                    <Text className="text-[11px] text-neutral-50 font-label">
                         {variant.toUpperCase()}
                     </Text>
                 </View>
@@ -68,7 +68,7 @@ export default function CollectionItem({
                 {/* TIME */}
                 {time && (
                     <View className="mt-3">
-                        <Text className="text-[10px] text-[#64748B] tracking-widest font-headingRegular">
+                        <Text className="text-[11px] text-[#64748B] tracking-widest font-headingRegular">
                             WORK_TIME
                         </Text>
                         <Text className="text-[13px] text-primary-200 font-bodyMedium mt-1">
@@ -96,7 +96,7 @@ export default function CollectionItem({
                 {/* FOOTER */}
                 {footerLabel && (
                     <View className="px-[16px] mt-3">
-                        <Text className="text-[10px] text-[#64748B] font-headingRegular tracking-widest">
+                        <Text className="text-[11px] text-[#64748B] font-headingRegular tracking-widest">
                             {footerLabel}
                         </Text>
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import { ScrollView, Text, View } from 'react-native'
 
 import Header from '@/components/shared/Header'
-import { ScrollView, Text, View } from 'react-native'
 import SearchBar from '@/components/shared/collection/SearchBar'
 import FilterTabs from '@/components/shared/collection/FilterTabs'
 import CollectionItem from '@/components/shared/collection/CollectionItem'
