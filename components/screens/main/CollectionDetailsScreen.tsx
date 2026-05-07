@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native'
 import Header from '@/components/shared/Header'
 import BuildChecklist from '@/components/shared/collection/BuildChecklist'
 import TelemetryPanel from '@/components/shared/collection/TelemetryPanel'
+import { SessionHistory } from '@/components/shared/collection/SessionHistory'
 
 export default function CollectionDetailsScreen() {
     const checklistData = [
@@ -41,9 +42,14 @@ export default function CollectionDetailsScreen() {
 
     const sessions = [
         {
-            title: 'Session #14 - Hip Framework',
+            title: 'Session #01 - Hip Framework',
             time: '05:43:00 ELAPSED',
             date: '2023.11.04',
+        },
+        {
+            title: 'Session #02 - Head Framework',
+            time: '03:30:00 ELAPSED',
+            date: '2023.11.06',
         },
     ]
 
@@ -87,6 +93,7 @@ export default function CollectionDetailsScreen() {
                         stats={telemetryStats}
                         breakdown={telemetryBreakdown}
                     />
+                    <SessionHistory sessions={sessions} />
                 </ScrollView>
             </View>
         </>
