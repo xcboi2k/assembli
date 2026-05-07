@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from 'react-native'
 
 import Header from '@/components/shared/Header'
 import BuildChecklist from '@/components/shared/collection/BuildChecklist'
+import TelemetryPanel from '@/components/shared/collection/TelemetryPanel'
 
 export default function CollectionDetailsScreen() {
     const checklistData = [
@@ -82,6 +83,10 @@ export default function CollectionDetailsScreen() {
                     </View>
 
                     <BuildChecklist items={checklistData} />
+                    <TelemetryPanel
+                        stats={telemetryStats}
+                        breakdown={telemetryBreakdown}
+                    />
                 </ScrollView>
             </View>
         </>

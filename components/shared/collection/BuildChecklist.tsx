@@ -51,12 +51,12 @@ export default function BuildChecklist({ items }) {
                                           className="p-4 mb-2 bg-[#0F1113]"
                                       >
                                           <View className="flex-row justify-between items-center">
-                                              <Text className="flex-1 text-[16px] text-[#CBD5E1] font-bodyRegular">
+                                              <Text className="flex-1 text-[16px] text-[#CBD5E1] font-body">
                                                   {sub.title}
                                               </Text>
 
                                               {sub.status && (
-                                                  <Text className="text-[11px] text-primary-200 font-bodyRegular ml-2">
+                                                  <Text className="text-[11px] text-primary-200 font-body ml-2">
                                                       {sub.status}
                                                   </Text>
                                               )}
