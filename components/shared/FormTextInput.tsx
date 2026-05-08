@@ -3,7 +3,7 @@ import { View, Text, TextInput } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
 type Props = {
-    label: string
+    label?: string
     value: string
     onChangeText?: (text: string) => void
     placeholder?: string
@@ -24,25 +24,27 @@ const FormTextInput = ({
     return (
         <View className="mb-4">
             {/* LABEL */}
-            <Text className="text-[10px] text-[#64748B] tracking-[2px] font-headingRegular mb-2">
-                {label}
-            </Text>
+            {label && (
+                <Text className="text-[12px] text-[#64748B] tracking-[2px] font-headingBold mb-2">
+                    {label}
+                </Text>
+            )}
 
             {/* INPUT */}
-            <View className="border border-[#1E293B] bg-[#090C11] flex-row items-center px-3">
+            <View className="border border-[#1E293B] bg-[#0F1113] flex-row items-center px-3">
                 <TextInput
                     value={value}
                     onChangeText={onChangeText}
                     placeholder={placeholder}
-                    placeholderTextColor="#475569"
+                    placeholderTextColor="#6B7280"
                     multiline={multiline}
                     editable={editable}
-                    className={`flex-1 text-white py-3 font-body ${
+                    className={`flex-1 text-white py-3 text-[16px] font-body ${
                         multiline ? 'min-h-[100px]' : ''
                     }`}
                 />
-
-                {icon && <Feather name={icon} size={16} color="#64748B" />}
+                {/* 
+                {icon && <Feather name={icon} size={16} color="#64748B" />} */}
             </View>
         </View>
     )

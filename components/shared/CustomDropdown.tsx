@@ -5,7 +5,7 @@ type Props = {
     label: string
     selectedValue: string
     onValueChange: (value: string) => void
-    data: string[]
+    data: any
     errorMessage?: any
 }
 
@@ -18,34 +18,38 @@ export default function CustomDropdown({
 }: Props) {
     return (
         <View className="mb-4">
-            <Text className="text-[10px] text-[#64748B] tracking-[2px] font-headingRegular mb-2">
-                {label}
-            </Text>
+            {label && (
+                <Text className="text-[12px] text-[#64748B] tracking-[2px] font-headingBold mb-2">
+                    {label}
+                </Text>
+            )}
 
-            <View className="border border-[#1E293B] bg-[#090C11]">
+            <View className="border border-[#1E293B] bg-[#0F1113]">
                 <SelectList
                     setSelected={(val) => onValueChange(val)}
                     data={data}
                     save="key"
                     boxStyles={{
-                        backgroundColor: '#090C11',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        borderColor: '#1E293B',
                         height: 56,
                         alignItems: 'center',
                     }}
-                    fontFamily="Inter"
-                    dropdownStyles={{
-                        backgroundColor: '#090C11',
-                        borderColor: '#1E293B',
+                    inputStyles={{
+                        fontSize: 16,
+                        color: '#FFFFFF',
                     }}
+                    dropdownTextStyles={{
+                        fontSize: 16,
+                        color: '#FFFFFF',
+                    }}
+                    fontFamily="inter"
                     maxHeight={100}
                 />
             </View>
-            <Text className="text-[10px] text-red-500 font-medium mt-1">
-                {errorMessage}
-            </Text>
+            {errorMessage && (
+                <Text className="text-[10px] text-red-500 font-medium mt-1">
+                    {errorMessage}
+                </Text>
+            )}
         </View>
     )
 }

@@ -7,35 +7,35 @@ import FormTextInput from '@/components/shared/FormTextInput'
 import CustomDropdown from '@/components/shared/CustomDropdown'
 
 const SYSTEM_CATEGORIES = [
-    { label: 'Gunpla', key: 'gunpla' },
-    { label: 'LEGO', key: 'lego' },
-    { label: 'Kotobukiya', key: 'kotobukiya' },
-    { label: 'Warhammer', key: 'warhammer' },
-    { label: 'Transformers', key: 'transformers' },
-    { label: 'Zoids', key: 'zoids' },
-    { label: 'Mecha Musume', key: 'mecha-musume' },
+    { key: 'gunpla', value: 'Gunpla' },
+    { key: 'lego', value: 'LEGO' },
+    { key: 'kotobukiya', value: 'Kotobukiya' },
+    { key: 'warhammer', value: 'Warhammer' },
+    { key: 'transformers', value: 'Transformers' },
+    { key: 'zoids', value: 'Zoids' },
+    { key: 'mecha-musume', value: 'Mecha Musume' },
 ]
 
 const months = [
-    { label: '01', key: '01' },
-    { label: '02', key: '02' },
-    { label: '03', key: '03' },
-    { label: '04', key: '04' },
-    { label: '05', key: '05' },
-    { label: '06', key: '06' },
-    { label: '07', key: '07' },
-    { label: '08', key: '08' },
-    { label: '09', key: '09' },
-    { label: '10', key: '10' },
-    { label: '11', key: '11' },
-    { label: '12', key: '12' },
+    { value: '01', key: '01' },
+    { value: '02', key: '02' },
+    { value: '03', key: '03' },
+    { value: '04', key: '04' },
+    { value: '05', key: '05' },
+    { value: '06', key: '06' },
+    { value: '07', key: '07' },
+    { value: '08', key: '08' },
+    { value: '09', key: '09' },
+    { value: '10', key: '10' },
+    { value: '11', key: '11' },
+    { value: '12', key: '12' },
 ]
 
 const days = Array.from({ length: 31 }, (_, i) => {
     const value = String(i + 1).padStart(2, '0')
 
     return {
-        label: value,
+        value: value,
         key: value,
     }
 })
@@ -44,7 +44,7 @@ const years = Array.from({ length: 20 }, (_, i) => {
     const value = String(2024 + i)
 
     return {
-        label: value,
+        value: value,
         key: value,
     }
 })
@@ -58,12 +58,7 @@ export default function CollectionAddScreen() {
     const [day, setDay] = useState('01')
     const [year, setYear] = useState('2025')
 
-    const [tasks, setTasks] = useState([
-        {
-            title: '',
-            subtasks: [''],
-        },
-    ])
+    const [tasks, setTasks] = useState<any>([])
 
     const addTask = () => {
         setTasks((prev) => [
@@ -115,16 +110,18 @@ export default function CollectionAddScreen() {
             <View className="flex-1 bg-[#0F1113] p-4">
                 <ScrollView>
                     {/* HERO PANEL */}
-                    <View className="border border-neutral-800 bg-background-200 p-4 mt-4">
-                        <Text className="text-[10px] tracking-[2px] text-[#64748B] font-headingRegular">
-                            PROTOCOL_DATA_ENTRY
-                        </Text>
+                    <View className="border border-[#1E293B] bg-[#1A1C1E] p-4">
+                        <View className="w-[48%] bg-[#1E293B]/50 p-2">
+                            <Text className="text-[11px] tracking-[2px] text-primary-200 font-headingRegular">
+                                PROTOCOL_DATA_ENTRY
+                            </Text>
+                        </View>
 
-                        <Text className="text-[36px] text-white font-headingBold mt-4 leading-[42px]">
+                        <Text className="text-[32px] text-white font-headingBold mt-4">
                             KIT_REGISTRY_CREATE
                         </Text>
 
-                        <Text className="text-[#94A3B8] text-[14px] leading-6 mt-4 font-body">
+                        <Text className="text-[#94A3B8] text-[16px] leading-6 mt-4 font-body">
                             Input technical specifications for the new unit.
                             Ensure all nomenclature matches manufacturer
                             documentation for database integrity.
@@ -135,45 +132,48 @@ export default function CollectionAddScreen() {
                             <View className="w-4 h-4 border border-primary-300 items-center justify-center mr-2">
                                 <View className="w-2 h-2 bg-primary-300" />
                             </View>
-
-                            <Text className="text-primary-300 text-[12px] tracking-[2px]">
+                            <Text className="text-primary-200 text-[12px] font-bodyMedium">
                                 READ TAP INPUT...
                             </Text>
                         </TouchableOpacity>
                     </View>
 
                     {/* SYSTEM NOTE */}
-                    <View className="mt-4 border border-neutral-800 bg-background-200 p-4">
+                    <View className="mt-4 border border-[#1E293B] bg-[#1A1C1E] p-4">
                         <View className="flex-row items-start">
-                            <View className="w-5 h-5 rounded-full border border-primary-300 items-center justify-center mr-3 mt-[2px]">
-                                <Text className="text-primary-300 text-[10px]">
-                                    !
-                                </Text>
-                            </View>
-
                             <View className="flex-1">
-                                <Text className="text-[11px] tracking-[2px] text-[#64748B]">
-                                    SYSTEM NOTE
-                                </Text>
+                                <View className="flex-row items-center">
+                                    <View className="mr-3">
+                                        <Feather
+                                            name="alert-circle"
+                                            size={16}
+                                            color="#ADC6FF"
+                                            className="mr-2"
+                                        />
+                                    </View>
+                                    <Text className="text-[13px] font-headingBold text-white">
+                                        SYSTEM NOTE
+                                    </Text>
+                                </View>
 
-                                <Text className="text-[13px] text-[#CBD5E1] mt-2 leading-5">
-                                    Manual verification of component quantity is
+                                <Text className="text-[16px] text-[#C1C6D7] font-body mt-2">
+                                    Manual verification of component tasks is
                                     required before commit.
                                 </Text>
                             </View>
-
-                            <Text className="text-[10px] text-[#64748B]">
-                                ID: TMP-4492
-                            </Text>
                         </View>
                     </View>
 
                     {/* FORM PANEL */}
-                    <View className="mt-4 border border-neutral-800 bg-background-200 p-4">
-                        <Text className="text-[10px] tracking-[2px] text-[#64748B] mb-5">
+                    <View className="bg-[#2D3339] py-2 px-6 flex-row justify-between">
+                        <Text className="text-[13px] font-headingBold text-white">
                             SPECIFICATION_FIELDS
                         </Text>
-
+                        <Text className="text-[13px] font-medium text-[#64748B]">
+                            ID: TMP-4492
+                        </Text>
+                    </View>
+                    <View className="border border-[#1E293B] bg-[#1A1C1E] p-6">
                         {/* INPUTS */}
                         <FormTextInput
                             label="DESIGNATION NAME"
@@ -193,11 +193,11 @@ export default function CollectionAddScreen() {
                             label="SYSTEM CATEGORY"
                             selectedValue={category}
                             onValueChange={setCategory}
-                            items={SYSTEM_CATEGORIES}
+                            data={SYSTEM_CATEGORIES}
                         />
 
                         {/* PROCUREMENT DATE */}
-                        <Text className="text-[10px] text-[#64748B] tracking-[2px] mb-2 mt-4">
+                        <Text className="text-[12px] text-[#64748B] tracking-[2px] font-headingBold mb-2">
                             PROCUREMENT DATE
                         </Text>
 
@@ -207,7 +207,7 @@ export default function CollectionAddScreen() {
                                     label=""
                                     selectedValue={month}
                                     onValueChange={setMonth}
-                                    items={months}
+                                    data={months}
                                 />
                             </View>
 
@@ -216,7 +216,7 @@ export default function CollectionAddScreen() {
                                     label=""
                                     selectedValue={day}
                                     onValueChange={setDay}
-                                    items={days}
+                                    data={days}
                                 />
                             </View>
 
@@ -225,139 +225,157 @@ export default function CollectionAddScreen() {
                                     label=""
                                     selectedValue={year}
                                     onValueChange={setYear}
-                                    items={years}
+                                    data={years}
                                 />
                             </View>
                         </View>
 
                         {/* TASKS */}
-                        <View className="mt-6">
-                            <Text className="text-[10px] text-[#64748B] tracking-[2px] mb-4">
+                        <View className="mb-4">
+                            <Text className="text-[12px] text-[#64748B] tracking-[2px] font-headingBold mb-2">
                                 TASK CONFIGURATION
                             </Text>
-
-                            {tasks.map((task, taskIndex) => (
-                                <View
-                                    key={taskIndex}
-                                    className="border border-neutral-800 bg-[#090C11] p-4 mb-4"
-                                >
-                                    {/* TASK TITLE */}
-                                    <FormTextInput
-                                        label={`TASK ${taskIndex + 1}`}
-                                        value={task.title}
-                                        onChangeText={(text) => {
-                                            const updated = [...tasks]
-                                            updated[taskIndex].title = text
-                                            setTasks(updated)
-                                        }}
-                                        placeholder="ENTER TASK NAME"
+                            {tasks.length === 0 ? (
+                                <View className="border border-dashed border-[#1E293B] py-10 items-center justify-center mb-4">
+                                    <Feather
+                                        name="clipboard"
+                                        size={28}
+                                        color="#64748B"
                                     />
 
-                                    {/* SUBTASKS */}
-                                    {task.subtasks.map((subtask, subIndex) => (
-                                        <View
-                                            key={subIndex}
-                                            className="flex-row items-center"
-                                        >
-                                            <View className="flex-1">
-                                                <FormTextInput
-                                                    label={`SUBTASK ${
-                                                        subIndex + 1
-                                                    }`}
-                                                    value={subtask}
-                                                    onChangeText={(text) => {
-                                                        const updated = [
-                                                            ...tasks,
-                                                        ]
+                                    <Text className="text-[#64748B] text-[14px] tracking-[2px] font-headingBold mt-4 mb-1">
+                                        NO TASKS CONFIGURED
+                                    </Text>
 
-                                                        updated[
-                                                            taskIndex
-                                                        ].subtasks[subIndex] =
-                                                            text
+                                    <Text className="text-[#64748B] text-[12px] font-body mb-4">
+                                        Add a task to initialize workflow
+                                    </Text>
 
-                                                        setTasks(updated)
-                                                    }}
-                                                    placeholder="ENTER SUBTASK"
-                                                />
-                                            </View>
-
-                                            {/* REMOVE SUBTASK */}
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    removeSubtask(
-                                                        taskIndex,
-                                                        subIndex
-                                                    )
-                                                }
-                                                className="ml-2 border border-red-500 px-4 py-4"
-                                            >
-                                                <Feather
-                                                    name="trash-2"
-                                                    size={16}
-                                                    color="#F87171"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    ))}
-
-                                    {/* ACTIONS */}
-                                    <View className="flex-row justify-between mt-3">
-                                        {/* ADD SUBTASK */}
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                addSubtask(taskIndex)
-                                            }
-                                            className="flex-row items-center border border-primary-500 px-4 py-3"
-                                        >
+                                    {/* ADD TASK */}
+                                    <TouchableOpacity
+                                        onPress={addTask}
+                                        className="border border-primary-200 p-4 items-center"
+                                    >
+                                        <View className="flex-row items-center">
                                             <Feather
-                                                name="plus"
-                                                size={14}
+                                                name="plus-circle"
+                                                size={20}
                                                 color="#ADC6FF"
                                             />
 
-                                            <Text className="text-primary-300 text-[11px] tracking-[2px] ml-2">
-                                                ADD SUBTASK
+                                            <Text className="text-white tracking-[2px] text-[12px] font-headingRegular ml-2">
+                                                ADD TASK
                                             </Text>
-                                        </TouchableOpacity>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (
+                                tasks.map((task, taskIndex) => (
+                                    <View key={taskIndex} className="mb-4">
+                                        {/* TASK TITLE */}
+                                        <FormTextInput
+                                            value={`TASK ${taskIndex + 1}`}
+                                            onChangeText={(text) => {
+                                                const updated = [...tasks]
+                                                updated[taskIndex].title = text
+                                                setTasks(updated)
+                                            }}
+                                            placeholder="ENTER TASK NAME"
+                                        />
 
-                                        {/* REMOVE TASK */}
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                removeTask(taskIndex)
-                                            }
-                                            className="flex-row items-center border border-red-500 px-4 py-3"
-                                        >
-                                            <Feather
-                                                name="trash-2"
-                                                size={14}
-                                                color="#F87171"
-                                            />
+                                        {/* SUBTASKS */}
+                                        {task.subtasks.map(
+                                            (subtask, subIndex) => (
+                                                <View
+                                                    key={subIndex}
+                                                    className="flex-row items-center"
+                                                >
+                                                    <View className="flex-1">
+                                                        <FormTextInput
+                                                            value={`SUBTASK ${
+                                                                subIndex + 1
+                                                            }`}
+                                                            onChangeText={(
+                                                                text
+                                                            ) => {
+                                                                const updated =
+                                                                    [...tasks]
 
-                                            <Text className="text-red-400 text-[11px] tracking-[2px] ml-2">
-                                                REMOVE
-                                            </Text>
-                                        </TouchableOpacity>
+                                                                updated[
+                                                                    taskIndex
+                                                                ].subtasks[
+                                                                    subIndex
+                                                                ] = text
+
+                                                                setTasks(
+                                                                    updated
+                                                                )
+                                                            }}
+                                                            placeholder="ENTER SUBTASK"
+                                                        />
+                                                    </View>
+
+                                                    {/* REMOVE SUBTASK */}
+                                                    <TouchableOpacity
+                                                        onPress={() =>
+                                                            removeSubtask(
+                                                                taskIndex,
+                                                                subIndex
+                                                            )
+                                                        }
+                                                        className="ml-2 border border-red-500 p-3 mb-4"
+                                                    >
+                                                        <Feather
+                                                            name="trash-2"
+                                                            size={18}
+                                                            color="#F87171"
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        )}
+
+                                        {/* ACTIONS */}
+                                        <View className="flex-row justify-between">
+                                            {/* ADD SUBTASK */}
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    addSubtask(taskIndex)
+                                                }
+                                                className="flex-row items-center border border-primary-500 px-4 py-3"
+                                            >
+                                                <Feather
+                                                    name="plus"
+                                                    size={14}
+                                                    color="#ADC6FF"
+                                                />
+
+                                                <Text className="text-primary-200 text-[12px] font-headingRegular tracking-[2px] ml-2">
+                                                    ADD SUBTASK
+                                                </Text>
+                                            </TouchableOpacity>
+
+                                            {/* REMOVE TASK */}
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    removeTask(taskIndex)
+                                                }
+                                                className="flex-row items-center border border-red-500 px-4 py-3"
+                                            >
+                                                <Feather
+                                                    name="trash-2"
+                                                    size={14}
+                                                    color="#F87171"
+                                                />
+
+                                                <Text className="text-red-400 text-[12px] font-headingRegular tracking-[2px] ml-2">
+                                                    CANCEL
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                </View>
-                            ))}
-
-                            {/* ADD TASK */}
-                            <TouchableOpacity
-                                onPress={addTask}
-                                className="border border-primary-500 py-4 items-center"
-                            >
-                                <View className="flex-row items-center">
-                                    <Feather
-                                        name="plus-circle"
-                                        size={16}
-                                        color="#ADC6FF"
-                                    />
-
-                                    <Text className="text-primary-300 tracking-[2px] text-[11px] ml-2">
-                                        ADD TASK
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
+                                ))
+                            )}
                         </View>
 
                         {/* FOOTER BUTTONS */}
@@ -371,7 +389,7 @@ export default function CollectionAddScreen() {
                                         color="#94A3B8"
                                     />
 
-                                    <Text className="text-[#94A3B8] tracking-[2px] ml-2">
+                                    <Text className="text-[#94A3B8] tracking-[2px] font-headingRegular text-[16px] ml-2">
                                         ABORT
                                     </Text>
                                 </View>
@@ -386,7 +404,7 @@ export default function CollectionAddScreen() {
                                         color="#001A41"
                                     />
 
-                                    <Text className="text-black tracking-[2px] font-label ml-2">
+                                    <Text className="text-black tracking-[2px] font-headingRegular text-[16px] ml-2">
                                         COMMIT
                                     </Text>
                                 </View>
