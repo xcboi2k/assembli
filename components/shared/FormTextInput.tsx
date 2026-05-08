@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons'
 
 type Props = {
     label?: string
-    value: string
+    value?: string
     onChangeText?: (text: string) => void
     placeholder?: string
     icon?: keyof typeof Feather.glyphMap

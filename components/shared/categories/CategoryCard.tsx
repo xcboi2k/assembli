@@ -35,7 +35,7 @@ export default function CategoryCard({
         <View className="border border-[#414755] bg-[#0D1C2D] p-3 mb-4">
             <View className="flex-row items-start justify-between">
                 {/* LEFT */}
-                <View className="flex-1 pr-4">
+                <View className="border-l-[4px] border-primary-200 flex-1 pl-3 pr-6">
                     <View className="flex-1">
                         <Text className="text-[13px] tracking-[2px] text-[#C1C6D7] font-bodyMedium">
                             ID_{item.id}
