@@ -9,11 +9,11 @@ export const SessionHistory = ({ sessions }) => {
                 <Text className="text-[12px] text-white tracking-widest font-headingRegular">
                     SESSION_HISTORY
                 </Text>
-                <Feather name="clock" size={12} color="#516072" />
+                <Feather name="clock" size={20} color="#516072" />
             </View>
             <View className="p-4">
                 {sessions.map((s, i) => (
-                    <View key={i} className="mb-3">
+                    <View key={i} className="flex-row mb-3">
                         {/* BULLET */}
                         <View className="w-2 h-2 rounded-full bg-primary-200 mt-2 mr-3" />
 

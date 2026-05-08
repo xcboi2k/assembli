@@ -5,7 +5,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 export default function BuildChecklist({ items }) {
     return (
-        <View className="border border-[#1E293B] bg-[#1A1C1E] mb-6">
+        <View className="border border-[#1E293B] bg-[#1A1C1E] mb-4">
             {/* HEADER */}
             <View className="px-4 py-2 border-b-[#1E293B] bg-[#273647]/30 flex-row justify-between">
                 <Text className="text-[12px] text-white tracking-widest font-headingRegular">
