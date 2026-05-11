@@ -15,7 +15,9 @@ export default function LoginScreen() {
 
     const goToMain = () => {
         const root =
-            navigation.getParent<NativeStackNavigationProp<RootStackParamList>>()
+            navigation.getParent<
+                NativeStackNavigationProp<RootStackParamList>
+            >()
         root?.navigate('Main')
     }
 
@@ -91,9 +93,6 @@ export default function LoginScreen() {
                     </View>
                     {/* TOP LABEL */}
                     <View className="items-center py-3 mb-6">
-                        <Text className="font-headingRegular text-[10px] text-[#8B90A0] tracking-widest">
-                            FORGOT_CREDENTIALS
-                        </Text>
                         <TouchableOpacity
                             className="mt-3"
                             onPress={() => navigation.navigate('SignUp')}
