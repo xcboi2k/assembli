@@ -1,10 +1,16 @@
-import SignUpTextInput from '@/components/shared/signup/SignUpTextInput'
+import { useNavigation } from '@react-navigation/native'
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import Checkbox from 'expo-checkbox'
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Checkbox from 'expo-checkbox'
+
+import SignUpTextInput from '@/components/shared/signup/SignUpTextInput'
 import ButtonText from '@/components/shared/ButtonText'
+import type { AuthStackParamList } from '@/navigation/types'
 
 export default function SignUpScreen() {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<AuthStackParamList, 'SignUp'>>()
     const [isChecked, setIsChecked] = useState(false)
     return (
         <View className="flex-1 bg-background-100 p-4">
@@ -83,7 +89,11 @@ export default function SignUpScreen() {
                 </View>
 
                 <View className="w-full">
-                    <ButtonText title="REGISTER_OPERATOR" isBold={true} />
+                    <ButtonText
+                        title="REGISTER_OPERATOR"
+                        isBold={true}
+                        onPress={() => navigation.navigate('Login')}
+                    />
                 </View>
 
                 <View className="w-full border-t border-[#414755] mb-6" />
@@ -93,7 +103,7 @@ export default function SignUpScreen() {
                         Already have an account?
                     </Text>
                     <TouchableOpacity
-                    // onPress={() => navigation.navigate('Login')}
+                        onPress={() => navigation.navigate('Login')}
                     >
                         <Text className="text-[13px] text-neutral-200 font-headingRegular">
                             Log In

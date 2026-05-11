@@ -1,11 +1,24 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Feather } from '@expo/vector-icons'
+import React from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
+
 import CustomTextInput from '@/components/shared/CustomTextInput'
 import ButtonText from '@/components/shared/ButtonText'
 import LoginHeader from '@/components/shared/login/LoginHeader'
+import type { AuthStackParamList, RootStackParamList } from '@/navigation/types'
 
 export default function LoginScreen() {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Login'>>()
+
+    const goToMain = () => {
+        const root =
+            navigation.getParent<NativeStackNavigationProp<RootStackParamList>>()
+        root?.navigate('Main')
+    }
+
     return (
         <>
             <LoginHeader />
@@ -71,13 +84,24 @@ export default function LoginScreen() {
                         rightLabel="ENCRYPTED_INPUT"
                     />
                     <View className="w-full">
-                        <ButtonText title="A U T H E N T I C A T E" />
+                        <ButtonText
+                            title="A U T H E N T I C A T E"
+                            onPress={goToMain}
+                        />
                     </View>
                     {/* TOP LABEL */}
                     <View className="items-center py-3 mb-6">
                         <Text className="font-headingRegular text-[10px] text-[#8B90A0] tracking-widest">
                             FORGOT_CREDENTIALS
                         </Text>
+                        <TouchableOpacity
+                            className="mt-3"
+                            onPress={() => navigation.navigate('SignUp')}
+                        >
+                            <Text className="font-headingRegular text-[11px] text-primary-400 tracking-widest">
+                                NEW_OPERATOR_REGISTRATION
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     {/* BOTTOM GRID */}
