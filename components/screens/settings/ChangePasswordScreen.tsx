@@ -16,7 +16,7 @@ export default function ChangePasswordScreen() {
                         {/* HEADER */}
                         <View className="p-4 border-b-[#1E293B] bg-[#273647]/30 flex-row justify-between">
                             <Text className="text-[16px] text-white tracking-widest font-headingRegular">
-                                CHANGE_PASSWORD
+                                PASSWORD_OVERRIDE
                             </Text>
                         </View>
 
