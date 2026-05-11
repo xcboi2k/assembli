@@ -1,10 +1,10 @@
-import { Feather, FontAwesome } from '@expo/vector-icons'
+import { Entypo, Feather, FontAwesome } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { colors } from '@/constants/themes'
 
-export default function Header({ title }) {
+export default function Header({ title, variant = 'default' }) {
     return (
         <View className="w-full justify-center relative py-2 mt-10 bg-[#1A1C1E] border border-b-[#414755]">
             <View className="flex-row items-center justify-between px-4 py-2">
@@ -35,7 +35,11 @@ export default function Header({ title }) {
                     <TouchableOpacity
                     // onPress={onPressSettings}
                     >
-                        <FontAwesome name="cog" size={20} color="#8B90A0" />
+                        {variant === 'default' ? (
+                            <FontAwesome name="cog" size={20} color="#8B90A0" />
+                        ) : (
+                            <Entypo name="back" size={20} color="#8B90A0" />
+                        )}
                     </TouchableOpacity>
                 </View>
             </View>
