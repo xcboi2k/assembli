@@ -17,6 +17,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import * as Sentry from '@sentry/react-native'
 
 import { RootNavigator } from '@/navigation'
+import { ToastProvider } from './providers/ToastProvider'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -48,7 +49,9 @@ export default Sentry.wrap(function App() {
         <SafeAreaProvider>
             <NavigationContainer>
                 <StatusBar style="light" />
-                <RootNavigator />
+                <ToastProvider>
+                    <RootNavigator />
+                </ToastProvider>
             </NavigationContainer>
         </SafeAreaProvider>
     )
