@@ -1,50 +1,44 @@
 import * as Sentry from '@sentry/react-native'
 
 import LoaderStore from '@/stores/LoaderStore'
-import { showToast } from '@/utils/showToast'
-import { supabase } from '@/utils/supabase'
-import { cleanAuthError } from '@/utils/errors/cleanError'
+import { useToast } from '@/providers/ToastProvider'
+import { register } from '@/backend/auth'
 
 export default function useSignUpUser() {
     const startLoading = LoaderStore((state) => state.startLoading)
     const stopLoading = LoaderStore((state) => state.stopLoading)
 
-    const signUpUser = async (values, { resetForm }) => {
+    const { showToast } = useToast()
+
+    const signUpUser = async (values, { resetForm }, goToNextScreen) => {
+        console.log('sign up values:', values)
         startLoading()
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email: values.email,
-                password: values.password,
-                options: {
-                    data: {
-                        username: values.userName,
-                    },
-                },
-            })
+            const response = await register(values.username, values.password)
 
-            console.log('response:', data)
-            console.log('error:', error)
-            if (error) {
+            console.log('response:', response)
+            if (!response.success) {
                 stopLoading()
-                showToast('error', 'Error', cleanAuthError(error))
+                showToast(response.message, 'error')
                 Sentry.captureException(
-                    `Failed to create user in ${values.email}. ${cleanAuthError(error)}`
+                    `Failed to create user in ${values.username}. ${response.message}`
                 )
             } else {
                 showToast(
-                    'success',
-                    'Success',
-                    'Successfully created an account'
+                    'Successfully created an account. Please login created account.',
+                    'success'
                 )
                 stopLoading()
+                resetForm
+                goToNextScreen
             }
         } catch (error) {
             //setting state of user feedback stores to initialize user feedback components
             stopLoading()
             await new Promise((resolve) => setTimeout(resolve, 100))
-            showToast('error', 'Error', `Failed to call API. ${error}`)
+            showToast(`Service not available right now.`, 'error')
             Sentry.captureException(
-                `Failed to create user in ${values.email}. ${error}`
+                `Failed to create user in ${values.username}. ${error}`
             )
         }
     }

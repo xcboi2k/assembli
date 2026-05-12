@@ -19,6 +19,8 @@ interface CustomTextInputProps {
     variant?: Variant
     hasIcon?: boolean
     rightLabel?: string
+    hasStatus?: boolean
+    statusText?: any
 }
 
 type Variant =
@@ -46,6 +48,8 @@ export default function CustomTextInput({
     inputFontSize,
     hasIcon = false,
     rightLabel,
+    hasStatus = false,
+    statusText,
 }: CustomTextInputProps) {
     const iconMap: Record<Variant, string> = {
         email: 'mail',
@@ -105,9 +109,7 @@ export default function CustomTextInput({
                     {...inputProps}
                     multiline={variant === 'review'}
                     textAlignVertical={variant === 'review' ? 'top' : 'center'}
-                    className={`text-${inputFontSize} ${
-                        variant === 'review' ? 'min-h-[100px] py-3' : ''
-                    }`}
+                    className="text-body text-[16px] text-[#8B90A0]"
                     secureTextEntry={
                         variant === 'password' && !isPasswordVisible
                     }
@@ -133,6 +135,15 @@ export default function CustomTextInput({
                     </View>
                 )}
             </View>
+            {hasStatus === true && (
+                <View className="w-full flex-row items-center">
+                    {statusText && (
+                        <Text className="text-[10px] font-body text-red-500">
+                            {statusText}
+                        </Text>
+                    )}
+                </View>
+            )}
         </View>
     )
 }

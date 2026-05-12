@@ -1,25 +1,56 @@
+import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { Feather } from '@expo/vector-icons'
-import React from 'react'
+import { useFormik } from 'formik'
+import React, { useEffect, useRef } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
+import * as Yup from 'yup'
 
-import CustomTextInput from '@/components/shared/CustomTextInput'
 import ButtonText from '@/components/shared/ButtonText'
+import CustomTextInput from '@/components/shared/CustomTextInput'
 import LoginHeader from '@/components/shared/login/LoginHeader'
-import type { AuthStackParamList, RootStackParamList } from '@/navigation/types'
+import { INITIAL_VALUES } from '@/constants/formvalues'
+import useLoginUser from '@/hooks/auth/useLoginUser'
+import type { AuthStackParamList } from '@/navigation/types'
+import CustomLoader from '@/components/shared/CustomLoader'
+import LoaderStore from '@/stores/LoaderStore'
 
 export default function LoginScreen() {
     const navigation =
         useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Login'>>()
 
-    const goToMain = () => {
-        const root =
-            navigation.getParent<
-                NativeStackNavigationProp<RootStackParamList>
-            >()
-        root?.navigate('Main')
-    }
+    const isLoading = LoaderStore((state) => state.isLoading)
+
+    const submitRef = useRef(null)
+
+    // Handles signing up
+    const { loginUser } = useLoginUser()
+
+    // Assigns sign up function to formik upon initialization
+    useEffect(() => {
+        submitRef.current = loginUser
+    }, [loginUser])
+
+    const formik = useFormik({
+        initialValues: INITIAL_VALUES.SIGN_IN,
+        // Pattern to resolve circular dependency
+        onSubmit: async (values, actions) => {
+            console.log('FORM SUBMITTED')
+            console.log(values)
+
+            try {
+                await loginUser(values, actions)
+            } catch (err) {
+                console.log(err)
+            } finally {
+                actions.setSubmitting(false)
+            }
+        },
+        validationSchema: Yup.object({
+            username: Yup.string().required('Username is required'),
+            password: Yup.string().required('Password is required'),
+        }),
+    })
 
     return (
         <>
@@ -61,8 +92,8 @@ export default function LoginScreen() {
                         inputProps={{
                             placeholder: 'IDENTIFICATION_STRING',
                             keyboardType: 'email-address',
-                            // onChangeText: formik.handleChange("email"),
-                            // value: formik.values.email,
+                            onChangeText: formik.handleChange('username'),
+                            value: formik.values.username,
                             autoCapitalize: 'none',
                         }}
                         customLabel="OPERATOR_ID"
@@ -70,13 +101,19 @@ export default function LoginScreen() {
                         padding="25px"
                         hasIcon={true}
                         rightLabel="REQUIRED_FIELD"
+                        hasStatus
+                        statusText={
+                            formik.errors.username &&
+                            formik.touched.username &&
+                            formik.errors.username
+                        }
                     />
                     <CustomTextInput
                         inputProps={{
                             placeholder: '••••••••••••',
                             keyboardType: 'email-address',
-                            // onChangeText: formik.handleChange("email"),
-                            // value: formik.values.email,
+                            onChangeText: formik.handleChange('password'),
+                            value: formik.values.password,
                             autoCapitalize: 'none',
                         }}
                         customLabel="ACCESS_CODE"
@@ -84,11 +121,17 @@ export default function LoginScreen() {
                         padding="25px"
                         hasIcon={true}
                         rightLabel="ENCRYPTED_INPUT"
+                        hasStatus
+                        statusText={
+                            formik.errors.password &&
+                            formik.touched.password &&
+                            formik.errors.password
+                        }
                     />
                     <View className="w-full">
                         <ButtonText
                             title="A U T H E N T I C A T E"
-                            onPress={goToMain}
+                            onPress={() => formik.handleSubmit()}
                         />
                     </View>
                     {/* TOP LABEL */}
@@ -131,6 +174,7 @@ export default function LoginScreen() {
                         </View>
                     </View>
                 </View>
+                <CustomLoader visible={isLoading} />
             </View>
         </>
     )

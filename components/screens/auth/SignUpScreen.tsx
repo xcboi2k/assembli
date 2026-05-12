@@ -1,18 +1,61 @@
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Checkbox from 'expo-checkbox'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 import SignUpTextInput from '@/components/shared/signup/SignUpTextInput'
 import ButtonText from '@/components/shared/ButtonText'
 import type { AuthStackParamList } from '@/navigation/types'
 import LoginHeader from '@/components/shared/login/LoginHeader'
+import useSignUpUser from '@/hooks/auth/useSignUpUser'
+import { INITIAL_VALUES } from '@/constants/formvalues'
+import CustomLoader from '@/components/shared/CustomLoader'
+import LoaderStore from '@/stores/LoaderStore'
 
 export default function SignUpScreen() {
     const navigation =
         useNavigation<NativeStackNavigationProp<AuthStackParamList, 'SignUp'>>()
+
+    const isLoading = LoaderStore((state) => state.isLoading)
+
     const [isChecked, setIsChecked] = useState(false)
+
+    const submitRef = useRef(null)
+
+    // Handles signing up
+    const { signUpUser } = useSignUpUser()
+
+    // Assigns sign up function to formik upon initialization
+    useEffect(() => {
+        submitRef.current = signUpUser
+    }, [signUpUser])
+
+    const formik = useFormik({
+        initialValues: INITIAL_VALUES.CREATE_ACCOUNT,
+        // Pattern to resolve circular dependency
+        onSubmit: async (values, actions) => {
+            console.log('FORM SUBMITTED')
+            console.log(values)
+
+            try {
+                await signUpUser(values, actions, navigation.navigate('Login'))
+            } catch (err) {
+                console.log(err)
+            } finally {
+                actions.setSubmitting(false)
+            }
+        },
+        validationSchema: Yup.object({
+            username: Yup.string().required('Username is required'),
+            password: Yup.string().required('Password is required'),
+            confirmPassword: Yup.string()
+                .oneOf([Yup.ref('password'), null], 'Passwords must match')
+                .required('Please confirm your password'),
+        }),
+    })
     return (
         <>
             <LoginHeader />
@@ -29,48 +72,57 @@ export default function SignUpScreen() {
                     <View className="w-full p-4 bg-[#010F1F] border border-[#414755]">
                         <SignUpTextInput
                             inputProps={{
-                                placeholder: 'Enter name',
-                                keyboardType: 'email-address',
-                                // onChangeText: formik.handleChange("email"),
-                                // value: formik.values.email,
-                                autoCapitalize: 'none',
-                            }}
-                            label="FULL_NAME"
-                            variant="name"
-                        />
-                        <SignUpTextInput
-                            inputProps={{
-                                placeholder: 'Enter email',
-                                keyboardType: 'email-address',
-                                // onChangeText: formik.handleChange("email"),
-                                // value: formik.values.email,
-                                autoCapitalize: 'none',
-                            }}
-                            label="EMAIL_ADDRESS"
-                            variant="email"
-                        />
-                        <SignUpTextInput
-                            inputProps={{
                                 placeholder: 'Enter username',
                                 keyboardType: 'email-address',
-                                // onChangeText: formik.handleChange("email"),
-                                // value: formik.values.email,
+                                onChangeText: formik.handleChange('username'),
+                                value: formik.values.username,
                                 autoCapitalize: 'none',
                             }}
                             label="USERNAME"
                             variant="username"
+                            hasStatus
+                            statusText={
+                                formik.errors.username &&
+                                formik.touched.username &&
+                                formik.errors.username
+                            }
                         />
                         <SignUpTextInput
                             inputProps={{
                                 placeholder: 'Enter password',
                                 keyboardType: 'email-address',
-                                // onChangeText: formik.handleChange("email"),
-                                // value: formik.values.email,
+                                onChangeText: formik.handleChange('password'),
+                                value: formik.values.password,
                                 autoCapitalize: 'none',
                             }}
                             label="PASSWORD"
                             variant="password"
                             secureTextEntry
+                            hasStatus
+                            statusText={
+                                formik.errors.password &&
+                                formik.touched.password &&
+                                formik.errors.password
+                            }
+                        />
+                        <SignUpTextInput
+                            inputProps={{
+                                placeholder: 'Enter password',
+                                keyboardType: 'email-address',
+                                onChangeText:
+                                    formik.handleChange('confirmPassword'),
+                                value: formik.values.confirmPassword,
+                                autoCapitalize: 'none',
+                            }}
+                            label="CONFIRM PASSWORD"
+                            variant="password"
+                            secureTextEntry
+                            hasStatus
+                            statusText={
+                                formik.errors.confirmPassword &&
+                                formik.touched.confirmPassword &&
+                                formik.errors.confirmPassword
+                            }
                         />
                         <View className="flex-row items-start mt-3 mb-6">
                             {/* CHECKBOX */}
@@ -88,7 +140,7 @@ export default function SignUpScreen() {
                                     AGREE_TO_SYSTEM_PROTOCOLS
                                 </Text>
                                 <Text className="text-body text-[#8B90A0] text-[12px]">
-                                    I confirm that I have reviewed the telemetry
+                                    I confirm that I have reviewed Assembli
                                     guidelines and data privacy terms.
                                 </Text>
                             </View>
@@ -98,7 +150,8 @@ export default function SignUpScreen() {
                             <ButtonText
                                 title="REGISTER_OPERATOR"
                                 isBold={true}
-                                onPress={() => navigation.navigate('Login')}
+                                onPress={() => formik.handleSubmit()}
+                                disabled={!isChecked}
                             />
                         </View>
 
@@ -118,6 +171,7 @@ export default function SignUpScreen() {
                         </View>
                     </View>
                 </ScrollView>
+                <CustomLoader visible={isLoading} />
             </View>
         </>
     )

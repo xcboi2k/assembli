@@ -18,6 +18,7 @@ import * as Sentry from '@sentry/react-native'
 
 import { RootNavigator } from '@/navigation'
 import { ToastProvider } from './providers/ToastProvider'
+import { initDB } from './backend/db'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -43,6 +44,10 @@ export default Sentry.wrap(function App() {
             SplashScreen.hideAsync()
         }
     }, [loaded])
+
+    useEffect(() => {
+        initDB()
+    }, [])
 
     if (!loaded) return null
     return (

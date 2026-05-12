@@ -1,5 +1,9 @@
 import React from 'react'
-import { Text, TouchableOpacity, type TouchableOpacityProps } from 'react-native'
+import {
+    Text,
+    TouchableOpacity,
+    type TouchableOpacityProps,
+} from 'react-native'
 
 type ButtonTextProps = {
     title: string
@@ -18,10 +22,14 @@ export default function ButtonText({
             onPress={onPress}
             disabled={disabled}
             accessibilityLabel={accessibilityLabel}
-            className="w-full bg-primary-100 py-[15px] rounded-[5px] flex flex-row items-center justify-center mb-6"
+            className={`w-full py-[15px] rounded-[5px] flex-row items-center justify-center mb-6 ${
+                disabled ? 'bg-neutral-700' : 'bg-primary-100'
+            }`}
         >
             <Text
-                className={`text-center text-primary-900 text-xl ${isBold ? 'font-headingBold' : 'font-headingRegular'}`}
+                className={`text-center text-xl ${
+                    disabled ? 'text-neutral-400' : 'text-primary-900'
+                } ${isBold ? 'font-headingBold' : 'font-headingRegular'}`}
             >
                 {title}
             </Text>

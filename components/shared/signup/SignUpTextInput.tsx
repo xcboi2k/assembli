@@ -19,6 +19,8 @@ type Props = {
     onRightLabelPress?: () => void
     secureTextEntry?: boolean
     inputProps?: TextInputProps // Assuming you want to use TextInputProps from react-native
+    hasStatus?: boolean
+    statusText?: any
 }
 
 const iconMap = {
@@ -38,6 +40,8 @@ export default function SignUpTextInput({
     onRightLabelPress,
     secureTextEntry,
     inputProps,
+    hasStatus = false,
+    statusText,
 }: Props) {
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false)
     const togglePasswordVisibility = () => {
@@ -68,8 +72,6 @@ export default function SignUpTextInput({
             <View className="flex-row items-center border border-[#414755] border-t-0 px-3 py-3 bg-tertiary-500">
                 <TextInput
                     {...inputProps}
-                    value={value}
-                    onChangeText={onChangeText}
                     placeholderTextColor="#9CA3AF"
                     secureTextEntry={secureTextEntry}
                     className="text-body text-[16px] text-[#8B90A0]"
@@ -94,6 +96,15 @@ export default function SignUpTextInput({
                     </View>
                 )}
             </View>
+            {hasStatus === true && (
+                <View className="w-full flex-row items-center">
+                    {statusText && (
+                        <Text className="text-[10px] font-body text-red-500">
+                            {statusText}
+                        </Text>
+                    )}
+                </View>
+            )}
         </View>
     )
 }
