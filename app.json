@@ -38,6 +38,12 @@
           "organization": "xcboi2k"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "13eaaed1-0cd0-4f1c-8b91-bb6eb507edcb"
+      }
+    },
+    "owner": "xcboi2k"
   }
 }
