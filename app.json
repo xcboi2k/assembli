@@ -38,7 +38,8 @@
           "project": "assembli",
           "organization": "xcboi2k"
         }
-      ]
+      ],
+      "@sentry/react-native"
     ],
     "extra": {
       "eas": {

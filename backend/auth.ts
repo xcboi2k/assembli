@@ -1,19 +1,6 @@
 import * as SecureStore from 'expo-secure-store'
-import bcrypt from 'react-native-bcrypt'
+import bcrypt from 'bcryptjs'
 import { db } from './db'
-
-bcrypt.setRandomFallback((len) => {
-    const chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
-    let result = ''
-
-    for (let i = 0; i < len; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-
-    return result
-})
 
 type AuthResponse = {
     success: boolean
@@ -67,7 +54,7 @@ export const register = async (
         }
 
         // Hash password
-        const hashedPassword = bcrypt.hashSync(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10)
 
         // Join date
         const createdAt = new Date().toISOString()
@@ -131,7 +118,7 @@ export const login = async (
             }
         }
 
-        const isValid = bcrypt.compareSync(password, user.password)
+        const isValid = await bcrypt.compare(password, user.password)
 
         if (!isValid) {
             return {
