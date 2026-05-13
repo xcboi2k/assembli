@@ -11,6 +11,14 @@ export const initDB = async () => {
             created_at TEXT
         );
 
+        CREATE TABLE IF NOT EXISTS categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL,
+            description TEXT,
+            created_at TEXT,
+            is_seeded INTEGER NOT NULL DEFAULT 0
+        );
+
         CREATE TABLE IF NOT EXISTS collections (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
@@ -34,85 +42,43 @@ export const initDB = async () => {
             name TEXT,
             status TEXT
         );
-
-        CREATE TABLE IF NOT EXISTS categories (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE NOT NULL,
-            description TEXT,
-            created_at TEXT,
-            is_seeded INTEGER NOT NULL DEFAULT 0
-        );
     `)
 
-    try {
-        await db.execAsync(
-            `ALTER TABLE categories ADD COLUMN is_seeded INTEGER NOT NULL DEFAULT 0`
-        )
-    } catch {
-        /* column already exists */
-    }
-
-    const seededCategoryNames = [
-        'Model Kits',
-        'Building Blocks',
-        'Miniatures',
-        'Diecast Models',
-        'RC & Robotics',
-        'Tools',
-        'Paints',
-        'Accessories',
-    ]
-
-    for (const name of seededCategoryNames) {
-        await db.runAsync(
-            `UPDATE categories SET is_seeded = 1 WHERE name = ?`,
-            [name]
-        )
-    }
-
+    // ensure schema migration (safe, idempotent)
     try {
         await db.execAsync(
             `ALTER TABLE collections ADD COLUMN category_id INTEGER`
         )
-    } catch {
-        /* column already exists */
-    }
+    } catch {}
 
-    await db.runAsync(
-        `UPDATE collections SET category_id = (
-            SELECT c.id FROM categories c WHERE c.name = collections.category
-        ) WHERE category_id IS NULL AND category IS NOT NULL`
-    )
+    // auto-seed categories
+    await seedCategories()
 }
 
 export const seedCategories = async () => {
-    const existing = await db.getFirstAsync(
-        `SELECT COUNT(*) as count FROM categories`
-    )
+    // safer check (better than COUNT)
+    const existing = await db.getFirstAsync(`SELECT id FROM categories LIMIT 1`)
 
-    if (existing?.count > 0) return
+    if (existing) return
 
     const now = new Date().toISOString()
 
     const categories = [
-        [
-            'Model Kits',
-            'Snap-fit or glue assembly scale models (Gunpla, Tamiya, etc.)',
-        ],
-        ['Building Blocks', 'Modular construction toys like LEGO systems'],
+        ['Model Kits', 'Snap-fit or glue models (Gunpla, Tamiya, etc.)'],
+        ['Building Blocks', 'LEGO-style construction systems'],
         ['Miniatures', 'Figures, dioramas, tabletop models'],
         ['Diecast Models', 'Pre-assembled metal scale models'],
-        ['RC & Robotics', 'Remote control and robotic kits'],
-        ['Tools', 'Hobby tools for assembly and detailing'],
-        ['Paints', 'Model paints, coatings, and finishes'],
+        ['RC & Robotics', 'Remote control and robotics kits'],
+        ['Tools', 'Hobby tools for building & detailing'],
+        ['Paints', 'Model paints and finishes'],
         ['Accessories', 'Custom parts, decals, upgrades'],
     ]
 
-    for (const [name, desc] of categories) {
+    for (const [name, description] of categories) {
         await db.runAsync(
             `INSERT INTO categories (name, description, created_at, is_seeded)
              VALUES (?, ?, ?, 1)`,
-            [name, desc, now]
+            [name, description, now]
         )
     }
 }

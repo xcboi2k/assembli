@@ -12,10 +12,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 export default function RootNavigator() {
     const isLoggedIn = UserStore((state) => state.isLoggedIn)
     return (
-        <Stack.Navigator
-            initialRouteName="Auth"
-            screenOptions={{ headerShown: false }}
-        >
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
             {isLoggedIn === true ? (
                 <>
                     <Stack.Screen name="Main" component={MainTabNavigator} />
