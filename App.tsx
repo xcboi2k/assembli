@@ -18,9 +18,7 @@ import * as Sentry from '@sentry/react-native'
 
 import { RootNavigator } from '@/navigation'
 import { ToastProvider } from './providers/ToastProvider'
-import { initDB } from './backend/db'
-
-SplashScreen.preventAutoHideAsync()
+import { db, initDB } from './backend/db'
 
 Sentry.init({
     dsn: 'https://1973f8127c62cdd92a976f6ec20f9d91@o4511221589475328.ingest.us.sentry.io/4511374275051520',
@@ -29,8 +27,10 @@ Sentry.init({
     sendDefaultPii: true,
 })
 
+SplashScreen.preventAutoHideAsync()
+
 export default Sentry.wrap(function App() {
-    const [loaded] = useFonts({
+    const [loaded, error] = useFonts({
         SpaceGrotesk_400Regular,
         SpaceGrotesk_600SemiBold,
         SpaceGrotesk_700Bold,
@@ -40,16 +40,30 @@ export default Sentry.wrap(function App() {
     })
 
     useEffect(() => {
-        if (loaded) {
-            SplashScreen.hideAsync()
-        }
-    }, [loaded])
+        const prepare = async () => {
+            try {
+                await initDB()
 
-    useEffect(() => {
-        initDB()
+                const users = await db.getAllAsync(`SELECT * FROM users`)
+
+                console.log(users)
+            } catch (e) {
+                console.log('DB ERROR:', e)
+            }
+        }
+
+        prepare()
     }, [])
 
-    if (!loaded) return null
+    useEffect(() => {
+        if (loaded || error) {
+            SplashScreen.hideAsync()
+        }
+    }, [loaded, error])
+
+    if (!loaded && !error) {
+        return null
+    }
     return (
         <SafeAreaProvider>
             <NavigationContainer>
