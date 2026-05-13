@@ -5,6 +5,7 @@ import CategoriesAddScreen from '@/components/screens/main/CategoriesAddScreen'
 import CategoriesScreen from '@/components/screens/main/CategoriesScreen'
 
 import type { CategoriesStackParamList } from './types'
+import CategoriesEditScreen from '@/components/screens/main/CategoriesEditScreen'
 
 const Stack = createNativeStackNavigator<CategoriesStackParamList>()
 
@@ -15,6 +16,10 @@ export default function CategoriesStack() {
             <Stack.Screen
                 name="CategoriesAdd"
                 component={CategoriesAddScreen}
+            />
+            <Stack.Screen
+                name="CategoriesEdit"
+                component={CategoriesEditScreen}
             />
         </Stack.Navigator>
     )

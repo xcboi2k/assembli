@@ -4,7 +4,7 @@ import { AppResponse, DeleteScopeBreakdown } from '../error-system'
 export const getCategories = async () => {
     try {
         const result = await db.getAllAsync(
-            `SELECT * FROM categories ORDER BY name ASC`
+            `SELECT * FROM categories ORDER BY id ASC`
         )
 
         return {
@@ -152,8 +152,7 @@ export const deleteCategory = async (
                 },
                 blocking: {
                     collectionsReferencingCategory: refCount,
-                    detail:
-                        'No rows were deleted. Reassign or delete those collections first (deleting a collection removes its tasks/subtasks but never removes category catalog rows).',
+                    detail: 'No rows were deleted. Reassign or delete those collections first (deleting a collection removes its tasks/subtasks but never removes category catalog rows).',
                 },
             }
 

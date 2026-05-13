@@ -7,14 +7,16 @@ import { useFormik } from 'formik'
 import Header from '@/components/shared/Header'
 import FormTextInput from '@/components/shared/FormTextInput'
 import LoaderStore from '@/stores/LoaderStore'
-import useAddCategory from '@/hooks/main/categories/useAddCategory'
-import { INITIAL_VALUES } from '@/constants/formvalues'
+import useUpdateCategory from '@/hooks/main/categories/useUpdateCategory'
 import CustomLoader from '@/components/shared/CustomLoader'
 
-export default function CategoriesAddScreen({ navigation }) {
+export default function CategoriesEditScreen({ route, navigation }) {
+    const item = route.params
+    console.log('categories edit params:', item)
+
     const isLoading = LoaderStore((state) => state.isLoading)
 
-    const { addCategory } = useAddCategory()
+    const { updateCategory } = useUpdateCategory()
     const goToNextScreen = () => {
         const newKey = Math.random().toString()
         navigation.navigate('Categories', {
@@ -25,7 +27,8 @@ export default function CategoriesAddScreen({ navigation }) {
 
     // Handle formik form submission
     const handleFormikSubmit = async (values, { resetForm }) => {
-        addCategory(
+        updateCategory(
+            item.id,
             {
                 categoryName: values.categoryName,
                 categoryDescription: values.categoryDescription,
@@ -35,9 +38,11 @@ export default function CategoriesAddScreen({ navigation }) {
         )
     }
 
-    // Formik configuration
     const formik = useFormik({
-        initialValues: INITIAL_VALUES.CATEGORIES,
+        initialValues: {
+            categoryName: item.name,
+            categoryDescription: item.description,
+        },
         onSubmit: handleFormikSubmit,
         validationSchema: Yup.object().shape({
             categoryName: Yup.string()
@@ -49,7 +54,7 @@ export default function CategoriesAddScreen({ navigation }) {
 
     return (
         <>
-            <Header title="INIT_NEW_ENTRY" />
+            <Header title="INIT_UPDATE_ENTRY" />
             <View className="flex-1 bg-[#0F1113] p-4">
                 <ScrollView>
                     {/* HERO PANEL */}
@@ -61,11 +66,11 @@ export default function CategoriesAddScreen({ navigation }) {
                         </View>
 
                         <Text className="text-[32px] text-white font-headingBold mt-4">
-                            CATEGORY_CREATE
+                            CATEGORY_UPDATE
                         </Text>
 
                         <Text className="text-[#94A3B8] text-[16px] leading-6 mt-4 font-body">
-                            Initialize a new category node in the system.
+                            Update a category node in the system.
                         </Text>
                     </View>
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
-export default function CategorySummary() {
+export default function CategorySummary({ data, handleNavigation }) {
     return (
         <View className="border border-[#414755] bg-[#122131] p-4 mb-4">
             {/* TOP */}
@@ -14,12 +14,15 @@ export default function CategorySummary() {
                     </Text>
 
                     <Text className="text-[24px] text-primary-200 font-bodyBold mt-1">
-                        04
+                        {data?.length}
                     </Text>
                 </View>
 
                 {/* CATEGORY ACCESS */}
-                <TouchableOpacity className="border border-primary-500 bg-primary-500/10 px-3 py-2 flex-row items-center">
+                <TouchableOpacity
+                    className="border border-primary-500 bg-primary-500/10 px-3 py-2 flex-row items-center"
+                    onPress={handleNavigation}
+                >
                     <Feather name="plus" size={14} color="#ADC6FF" />
 
                     <Text className="text-[11px] tracking-[2px] text-primary-200 ml-2 font-headingBold">
@@ -29,7 +32,7 @@ export default function CategorySummary() {
             </View>
 
             {/* TOTAL COMPONENTS */}
-            <View className="mt-4">
+            {/* <View className="mt-4">
                 <Text className="text-[12px] tracking-[2px] text-[#64748B] font-headingBold">
                     TOTAL_COMPONENTS
                 </Text>
@@ -37,7 +40,7 @@ export default function CategorySummary() {
                 <Text className="text-[24px] text-primary-200 font-bodyBold mt-1">
                     1,429
                 </Text>
-            </View>
+            </View> */}
 
             {/* SYSTEM STATUS */}
             <View className="mt-4">

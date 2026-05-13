@@ -16,8 +16,8 @@ export default function useAddCategory() {
         startLoading()
         try {
             const response = await createCategory(
-                values.name,
-                values.description
+                values.categoryName,
+                values.categoryDescription
             )
 
             if (!response.success) {

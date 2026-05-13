@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, TextInput, TextInputProps } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
 type Props = {
@@ -10,16 +10,19 @@ type Props = {
     icon?: keyof typeof Feather.glyphMap
     multiline?: boolean
     editable?: boolean
+    inputProps?: TextInputProps // Assuming you want to use TextInputProps from react-native
+    hasStatus?: boolean
+    statusText?: any
 }
 
 const FormTextInput = ({
     label,
-    value,
-    onChangeText,
-    placeholder,
     icon,
     multiline = false,
     editable = true,
+    inputProps,
+    hasStatus = false,
+    statusText,
 }: Props) => {
     return (
         <View className="mb-4">
@@ -33,9 +36,7 @@ const FormTextInput = ({
             {/* INPUT */}
             <View className="border border-[#1E293B] bg-[#0F1113] flex-row items-center px-3">
                 <TextInput
-                    value={value}
-                    onChangeText={onChangeText}
-                    placeholder={placeholder}
+                    {...inputProps}
                     placeholderTextColor="#6B7280"
                     multiline={multiline}
                     editable={editable}
@@ -46,6 +47,15 @@ const FormTextInput = ({
                 {/* 
                 {icon && <Feather name={icon} size={16} color="#64748B" />} */}
             </View>
+            {hasStatus === true && (
+                <View className="w-full flex-row items-center">
+                    {statusText && (
+                        <Text className="text-[10px] font-body text-red-500">
+                            {statusText}
+                        </Text>
+                    )}
+                </View>
+            )}
         </View>
     )
 }

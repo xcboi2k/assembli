@@ -17,8 +17,8 @@ export default function useUpdateCategory() {
         try {
             const response = await updateCategoryRecord({
                 id: Number(id),
-                name: values.name,
-                description: values.description,
+                name: values.categoryName,
+                description: values.categoryDescription,
             })
 
             if (!response.success) {

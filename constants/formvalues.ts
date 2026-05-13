@@ -5,4 +5,8 @@ export const INITIAL_VALUES = {
         password: '',
         confirmPassword: '',
     },
+    CATEGORIES: {
+        categoryName: '',
+        categoryDescription: '',
+    },
 }

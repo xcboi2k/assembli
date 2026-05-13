@@ -16,6 +16,7 @@ export type CollectionsStackParamList = {
 export type CategoriesStackParamList = {
     CategoriesHome: undefined
     CategoriesAdd: undefined
+    CategoriesEdit: undefined
 }
 
 export type MainTabParamList = {

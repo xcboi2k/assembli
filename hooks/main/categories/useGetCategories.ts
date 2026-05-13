@@ -17,6 +17,7 @@ export default function useGetCategories() {
         setLoading(true)
         try {
             const response = await getCategories()
+            console.log('fetch categories response:', response)
 
             if (!response.success) {
                 setLoading(false)
