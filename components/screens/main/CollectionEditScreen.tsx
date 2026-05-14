@@ -11,8 +11,8 @@ import FormTextInput from '@/components/shared/FormTextInput'
 import Header from '@/components/shared/Header'
 import { INITIAL_VALUES } from '@/constants/formvalues'
 import useGetCategories from '@/hooks/main/categories/useGetCategories'
-import useAddCollectionItem from '@/hooks/main/collections/useAddCollectionItem'
 import LoaderStore from '@/stores/LoaderStore'
+import useUpdateCollectionItem from '@/hooks/main/collections/useUpdateCollectionItem'
 
 const months = [
     { value: '01', key: '01' },
@@ -47,7 +47,9 @@ const years = Array.from({ length: 20 }, (_, i) => {
     }
 })
 
-export default function CollectionAddScreen({ route, navigation }) {
+export default function CollectionEditScreen({ route, navigation }) {
+    const item = route.params
+
     const isLoading = LoaderStore((state) => state.isLoading)
     const startLoading = LoaderStore((state) => state.startLoading)
     const stopLoading = LoaderStore((state) => state.stopLoading)
@@ -65,12 +67,11 @@ export default function CollectionAddScreen({ route, navigation }) {
 
     const goToNextScreen = () => {
         const newKey = Math.random().toString()
-        navigation.navigate('DashboardTaskAdd', {
+        navigation.navigate('TaskAdd', {
             key: newKey,
-            from: 'collection-add',
         })
     }
-    const { addCollectionItem } = useAddCollectionItem()
+    const { updateCollectionItem } = useUpdateCollectionItem()
     // Handle formik form submission
     const handleFormikSubmit = async (values, { resetForm }) => {
         startLoading()
@@ -103,7 +104,8 @@ export default function CollectionAddScreen({ route, navigation }) {
         if (hasError) return
 
         // Add collection item
-        addCollectionItem(
+        updateCollectionItem(
+            item.id,
             {
                 name: values.collectionName,
                 series: values.collectionSeries,
@@ -117,7 +119,10 @@ export default function CollectionAddScreen({ route, navigation }) {
 
     // Formik configuration
     const formik = useFormik({
-        initialValues: INITIAL_VALUES.COLLECTION,
+        initialValues: {
+            collectionName: item.name,
+            collectionSeries: item.series,
+        },
         onSubmit: handleFormikSubmit,
         validationSchema: Yup.object().shape({
             collectionName: Yup.string()
@@ -133,23 +138,18 @@ export default function CollectionAddScreen({ route, navigation }) {
 
     useFocusEffect(
         useCallback(() => {
-            console.log('Mount Collection Add')
+            console.log('Mount Collection Edit')
             fetchCategories()
 
             return () => {
-                console.log('Unmount Collection Add')
+                console.log('Unmount Collection Edit')
             }
         }, [])
     )
 
-    const handleBackNavigation = () => {
-        const newKey = Math.random().toString()
-        navigation.navigate('DashboardHome')
-    }
-
     return (
         <>
-            <Header title="INIT_NEW_ENTRY" />
+            <Header title="INIT_UPDATE_ENTRY" />
             <View className="flex-1 bg-[#0F1113] p-4">
                 <ScrollView>
                     {/* HERO PANEL */}
@@ -161,11 +161,11 @@ export default function CollectionAddScreen({ route, navigation }) {
                         </View>
 
                         <Text className="text-[32px] text-white font-headingBold mt-4">
-                            KIT_REGISTRY_CREATE
+                            KIT_REGISTRY_UPDATE
                         </Text>
 
                         <Text className="text-[#94A3B8] text-[16px] leading-6 mt-4 font-body">
-                            Input technical specifications for the new unit.
+                            Input technical specifications for the current unit.
                             Ensure all nomenclature matches manufacturer
                             documentation for database integrity.
                         </Text>
@@ -213,8 +213,8 @@ export default function CollectionAddScreen({ route, navigation }) {
                             SPECIFICATION_FIELDS
                         </Text>
                         {/* <Text className="text-[13px] font-medium text-[#64748B]">
-                            ID: TMP-4492
-                        </Text> */}
+                    ID: TMP-4492
+                </Text> */}
                     </View>
                     <View className="border border-[#1E293B] bg-[#1A1C1E] p-6">
                         {/* INPUTS */}
@@ -299,10 +299,7 @@ export default function CollectionAddScreen({ route, navigation }) {
                         {/* FOOTER BUTTONS */}
                         <View className="flex-row mt-8">
                             {/* ABORT */}
-                            <TouchableOpacity
-                                className="flex-1 border border-neutral-700 py-4 items-center mr-2"
-                                onPress={handleBackNavigation}
-                            >
+                            <TouchableOpacity className="flex-1 border border-neutral-700 py-4 items-center mr-2">
                                 <View className="flex-row items-center">
                                     <Feather
                                         name="x"

@@ -5,12 +5,15 @@ export type AuthStackParamList = {
 
 export type DashboardStackParamList = {
     DashboardHome: undefined
+    DashboardCollectionAdd: undefined
+    DashboardTaskAdd: undefined
 }
 
 export type CollectionsStackParamList = {
     CollectionHome: undefined
     CollectionDetails: undefined
-    CollectionAdd: undefined
+    CollectionEdit: undefined
+    CollectionTaskAdd: undefined
 }
 
 export type CategoriesStackParamList = {

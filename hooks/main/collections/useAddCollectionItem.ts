@@ -16,10 +16,10 @@ export default function useAddCollectionItem() {
         startLoading()
         try {
             const response = await createCollection({
-                user_id: values.user_id ?? user?.id,
+                user_id: user?.id,
                 name: values.name,
                 series: values.series,
-                category: values.category,
+                category_id: values.category,
                 procurement_date: values.procurement_date,
             })
 

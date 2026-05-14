@@ -3,8 +3,8 @@ import { SelectList } from 'react-native-dropdown-select-list'
 
 type Props = {
     label: string
-    selectedValue: string
-    onValueChange: (value: string) => void
+    selectedValue: any
+    onValueChange: (value: any) => void
     data: any
     errorMessage?: any
 }

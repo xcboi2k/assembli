@@ -1,5 +1,7 @@
 import React from 'react'
 import { ScrollView, Text, View } from 'react-native'
+import { useNavigation } from '@react-navigation/core'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import Header from '@/components/shared/Header'
 import BacklogCard from '@/components/shared/dashboard/BacklogCard'
@@ -8,8 +10,14 @@ import StatCard from '@/components/shared/dashboard/StatCard'
 import Section from '@/components/shared/dashboard/Section'
 import TaskItem from '@/components/shared/dashboard/TaskItem'
 import LogItem from '@/components/shared/dashboard/LogItem'
+import AddCollectionCard from '@/components/shared/dashboard/AddCollectionCard'
+
+import { DashboardStackParamList } from '@/navigation'
 
 export default function DashboardScreen() {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<DashboardStackParamList>>()
+
     const heatmapData = Array.from({ length: 35 }).map((_, i) => ({
         date: `2026-01-${i + 1}`,
         value: Math.floor(Math.random() * 5), // 0–4
@@ -20,7 +28,12 @@ export default function DashboardScreen() {
             <Header title="SYSTEM_STATUS: NOMINAL" />
             <View className="flex-1 bg-background-100 p-4">
                 <ScrollView>
-                    <BacklogCard
+                    <AddCollectionCard
+                        onPress={() =>
+                            navigation.navigate('DashboardCollectionAdd')
+                        }
+                    />
+                    {/* <BacklogCard
                         variant="current"
                         subtitle="CURRENT_PROJECT"
                         title="MG WING ZERO EW"
@@ -50,14 +63,12 @@ export default function DashboardScreen() {
                         maxValue={4}
                     />
 
-                    {/* ================= STATS ================= */}
                     <View className="w-full flex-row justify-between mb-4">
                         <StatCard label="ACQUIRED" value="42" />
                         <StatCard label="ONGOING" value="03" highlight />
                         <StatCard label="COMPLETED" value="128" />
                     </View>
 
-                    {/* ================= UPCOMING TASKS ================= */}
                     <Section title="UPCOMING_TASKS" showAdd>
                         <TaskItem
                             title="SANDINI._FINISH_WIN!_S"
@@ -78,7 +89,6 @@ export default function DashboardScreen() {
                         />
                     </Section>
 
-                    {/* ================= LOG ENTRIES ================= */}
                     <Section title="LOG_ENTRIES">
                         <LogItem
                             time="2024-10-24 09:15:01"
@@ -94,7 +104,7 @@ export default function DashboardScreen() {
                             time="2024-10-23 14:20:12"
                             text="Decal sheet #4 finalized. Applied matte topcoat to shield assembly."
                         />
-                    </Section>
+                    </Section> */}
                 </ScrollView>
             </View>
         </>

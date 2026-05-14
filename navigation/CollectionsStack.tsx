@@ -4,8 +4,9 @@ import React from 'react'
 import CollectionAddScreen from '@/components/screens/main/CollectionAddScreen'
 import CollectionDetailsScreen from '@/components/screens/main/CollectionDetailsScreen'
 import CollectionScreen from '@/components/screens/main/CollectionScreen'
-
 import type { CollectionsStackParamList } from './types'
+import TaskAddScreen from '@/components/screens/main/TaskAddScreen'
+import CollectionEditScreen from '@/components/screens/main/CollectionEditScreen'
 
 const Stack = createNativeStackNavigator<CollectionsStackParamList>()
 
@@ -17,7 +18,11 @@ export default function CollectionsStack() {
                 name="CollectionDetails"
                 component={CollectionDetailsScreen}
             />
-            <Stack.Screen name="CollectionAdd" component={CollectionAddScreen} />
+            <Stack.Screen
+                name="CollectionEdit"
+                component={CollectionEditScreen}
+            />
+            <Stack.Screen name="CollectionTaskAdd" component={TaskAddScreen} />
         </Stack.Navigator>
     )
 }

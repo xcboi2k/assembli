@@ -56,17 +56,17 @@ export default function CollectionItem({
                 {/* TOP ROW */}
 
                 {/* TITLE */}
-                <Text className="text-[16px] text-white font-headingRegular">
+                <Text className="text-[16px] text-white font-headingRegular uppercase">
                     {title}
                 </Text>
 
                 {/* SUBTITLE */}
-                <Text className="text-[#64748B] text-[13px] mt-1 font-bodyMedium">
+                <Text className="text-[#64748B] text-[13px] mt-1 font-bodyMedium uppercase">
                     {subtitle}
                 </Text>
 
                 {/* TIME */}
-                {time && (
+                {/* {time && (
                     <View className="mt-3">
                         <Text className="text-[11px] text-[#64748B] tracking-widest font-headingRegular">
                             WORK_TIME
@@ -75,7 +75,7 @@ export default function CollectionItem({
                             {time}
                         </Text>
                     </View>
-                )}
+                )} */}
 
                 {/* PROGRESS */}
                 {progress !== undefined && (
