@@ -53,6 +53,11 @@ export default function CollectionAddScreen({ route, navigation }) {
     const stopLoading = LoaderStore((state) => state.stopLoading)
 
     const { categories, fetchCategories } = useGetCategories()
+    const categoryOptions =
+        categories?.map((category) => ({
+            value: category.name,
+            key: String(category.id),
+        })) || []
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [categoryError, setCategoryError] = useState('')
 
@@ -256,7 +261,7 @@ export default function CollectionAddScreen({ route, navigation }) {
                             onValueChange={(value) =>
                                 setSelectedCategory(value)
                             }
-                            data={categories}
+                            data={categoryOptions}
                             errorMessage={categoryError}
                         />
 
@@ -317,7 +322,10 @@ export default function CollectionAddScreen({ route, navigation }) {
                             </TouchableOpacity>
 
                             {/* COMMIT */}
-                            <TouchableOpacity className="flex-1 bg-primary-200 py-4 items-center ml-2">
+                            <TouchableOpacity
+                                className="flex-1 bg-primary-200 py-4 items-center ml-2"
+                                onPress={formik.handleSubmit}
+                            >
                                 <View className="flex-row items-center">
                                     <Feather
                                         name="check-circle"

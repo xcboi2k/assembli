@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 
 type Variant = 'displaying' | 'started' | 'in box'
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
     progress?: number
     footerLabel?: string
     footerValue?: string
+    onPress?: () => void
 }
 
 const variantStyles = {
@@ -36,11 +37,12 @@ export default function CollectionItem({
     progress,
     footerLabel,
     footerValue,
+    onPress,
 }: Props) {
     const styles = variantStyles[variant]
 
     return (
-        <View className="w-full mb-4">
+        <TouchableOpacity className="w-full mb-4" onPress={onPress}>
             <View className="flex-row justify-between items-center bg-[#2D3339] p-2">
                 <Text className="text-[11px] text-primary-200 tracking-widest font-headingRegular">
                     {header}
@@ -106,6 +108,6 @@ export default function CollectionItem({
                     </View>
                 )}
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }

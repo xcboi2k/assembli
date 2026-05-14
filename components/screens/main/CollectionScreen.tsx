@@ -21,6 +21,7 @@ export default function CollectionScreen() {
     const [activeTab, setActiveTab] = useState('ALL')
 
     const { data, loading, getCollectionItems } = useGetCollectionItems()
+    console.log('collection data:', data)
 
     useFocusEffect(
         useCallback(() => {
@@ -34,7 +35,7 @@ export default function CollectionScreen() {
     )
 
     const handleNavigation = (item) =>
-        navigation.navigate('CollectionEdit', item)
+        navigation.navigate('CollectionDetails', item)
 
     const { refreshing, onRefresh } = useRefresh({
         postRefresh: () => getCollectionItems(),
@@ -59,12 +60,16 @@ export default function CollectionScreen() {
                                     />
                                     {data?.map((item, index) => (
                                         <CollectionItem
+                                            key={index}
                                             variant="displaying"
                                             header={`UNIT_${item.id}`}
                                             title={item.name}
                                             subtitle={item.series}
                                             time="42:15:00"
                                             progress={0.9}
+                                            onPress={() =>
+                                                handleNavigation(item)
+                                            }
                                         />
                                     ))}
                                 </>
