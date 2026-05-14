@@ -299,7 +299,12 @@ export default function CollectionEditScreen({ route, navigation }) {
                         {/* FOOTER BUTTONS */}
                         <View className="flex-row mt-8">
                             {/* ABORT */}
-                            <TouchableOpacity className="flex-1 border border-neutral-700 py-4 items-center mr-2">
+                            <TouchableOpacity
+                                className="flex-1 border border-neutral-700 py-4 items-center mr-2"
+                                onPress={() =>
+                                    navigation.navigate('CollectionHome')
+                                }
+                            >
                                 <View className="flex-row items-center">
                                     <Feather
                                         name="x"
