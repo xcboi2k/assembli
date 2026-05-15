@@ -13,7 +13,7 @@ export const createCollection = async (data: {
     procurement_date: string
 }) => {
     try {
-        await db.runAsync(
+        const result = await db.runAsync(
             `INSERT INTO collections
             (user_id, name, category_id, series, procurement_date)
             VALUES (?, ?, ?, ?, ?)`,
@@ -26,9 +26,17 @@ export const createCollection = async (data: {
             ]
         )
 
+        const insertedId = result.lastInsertRowId
+
+        const insertedItem = await db.getFirstAsync(
+            `SELECT * FROM collections WHERE id = ?`,
+            [insertedId]
+        )
+
         return {
             success: true,
             message: 'Collection created',
+            data: insertedItem,
         }
     } catch (error) {
         console.log(error)
@@ -36,6 +44,7 @@ export const createCollection = async (data: {
         return {
             success: false,
             message: 'Failed to create collection',
+            collection_id: null,
         }
     }
 }
@@ -175,7 +184,10 @@ export const deleteCollection = async (
             data: breakdown,
         }
     } catch (err) {
-        return handleDBError(err, 'Delete collection') as AppResponse<DeleteScopeBreakdown>
+        return handleDBError(
+            err,
+            'Delete collection'
+        ) as AppResponse<DeleteScopeBreakdown>
     }
 }
 
