@@ -12,7 +12,7 @@ export default function useAddCollectionItem() {
 
     const { showToast } = useToast()
 
-    const addCollectionItem = async (values, resetForm, goToNextScreen) => {
+    const addCollectionItem = async (values, resetForm, navigation) => {
         startLoading()
         try {
             const response = await createCollection({
@@ -33,7 +33,10 @@ export default function useAddCollectionItem() {
                 resetForm()
                 stopLoading()
                 showToast(response.message, 'success')
-                goToNextScreen()
+                navigation.navigate('DashboardTaskAdd', {
+                    from: 'collection-add',
+                    item: response.collection_id,
+                })
             }
         } catch (error) {
             stopLoading()

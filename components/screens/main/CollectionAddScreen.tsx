@@ -68,13 +68,6 @@ export default function CollectionAddScreen({ route, navigation }) {
     const [dayError, setDayError] = useState('')
     const [yearError, setYearError] = useState('')
 
-    const goToNextScreen = () => {
-        const newKey = Math.random().toString()
-        navigation.navigate('DashboardTaskAdd', {
-            key: newKey,
-            from: 'collection-add',
-        })
-    }
     const { addCollectionItem } = useAddCollectionItem()
     // Handle formik form submission
     const handleFormikSubmit = async (values, { resetForm }) => {
@@ -116,7 +109,7 @@ export default function CollectionAddScreen({ route, navigation }) {
                 procurement_date: `${month}/${day}/${year}`,
             },
             resetForm,
-            goToNextScreen
+            navigation
         )
     }
 
