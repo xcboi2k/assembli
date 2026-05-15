@@ -20,7 +20,7 @@ type Task = {
     subtasks: Subtask[]
 }
 
-export default function TaskAddScreen({ route, navigation }) {
+export default function DashboardTaskAddScreen({ route, navigation }) {
     const params = route.params
     console.log('task add params:', params)
 
@@ -42,8 +42,9 @@ export default function TaskAddScreen({ route, navigation }) {
             taskIdCounter.current = 0
             subtaskIdCounter.current = 0
 
+            console.log('Mount Dashboard Task Add')
             return () => {
-                // optional cleanup when leaving screen
+                console.log('Unmount Dashboard Task Add')
             }
         }, [])
     )
@@ -64,11 +65,7 @@ export default function TaskAddScreen({ route, navigation }) {
     }
 
     const handleBackNavigation = () => {
-        if (params.from === 'collection-add') {
-            navigation.navigate('DashboardHome')
-        } else {
-            navigation.navigate('CollectionDetails', params.item)
-        }
+        navigation.navigate('DashboardHome')
     }
 
     return (

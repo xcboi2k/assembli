@@ -32,6 +32,7 @@ Sentry.init({
 SplashScreen.preventAutoHideAsync()
 
 export default Sentry.wrap(function App() {
+    useDrizzleStudio(db)
     const [loaded, error] = useFonts({
         SpaceGrotesk_400Regular,
         SpaceGrotesk_600SemiBold,
@@ -66,8 +67,6 @@ export default Sentry.wrap(function App() {
     if (!loaded && !error) {
         return null
     }
-
-    useDrizzleStudio(db)
 
     return (
         <SafeAreaProvider>
