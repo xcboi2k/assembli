@@ -15,6 +15,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import * as Sentry from '@sentry/react-native'
+import { useDrizzleStudio } from 'expo-drizzle-studio-plugin'
+import * as SQLite from 'expo-sqlite'
 
 import { RootNavigator } from '@/navigation'
 import { ToastProvider } from './providers/ToastProvider'
@@ -44,9 +46,9 @@ export default Sentry.wrap(function App() {
             try {
                 await initDB()
 
-                const users = await db.getAllAsync(`SELECT * FROM users`)
+                // const tasks = await db.getAllAsync('SELECT * FROM tasks')
 
-                console.log(users)
+                // console.log('TABLES:', tasks)
             } catch (e) {
                 console.log('DB ERROR:', e)
             }
@@ -64,6 +66,9 @@ export default Sentry.wrap(function App() {
     if (!loaded && !error) {
         return null
     }
+
+    useDrizzleStudio(db)
+
     return (
         <SafeAreaProvider>
             <NavigationContainer>
