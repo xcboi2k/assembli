@@ -61,7 +61,9 @@ export default function TaskAddScreen({ route, navigation }) {
             })),
         }
 
-        await addTasksWithSubtasks(payload)
+        await addTasksWithSubtasks(payload, () =>
+            navigation.navigate('CollectionDetails', params.item)
+        )
     }
 
     const handleBackNavigation = () => {

@@ -34,8 +34,7 @@ export default function useAddCollectionItem() {
                 stopLoading()
                 showToast(response.message, 'success')
                 navigation.navigate('DashboardTaskAdd', {
-                    from: 'collection-add',
-                    item: response.collection_id,
+                    item: response.data,
                 })
             }
         } catch (error) {

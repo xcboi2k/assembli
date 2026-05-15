@@ -61,7 +61,9 @@ export default function DashboardTaskAddScreen({ route, navigation }) {
             })),
         }
 
-        await addTasksWithSubtasks(payload)
+        await addTasksWithSubtasks(payload, () =>
+            navigation.navigate('DashboardHome')
+        )
     }
 
     const handleBackNavigation = () => {

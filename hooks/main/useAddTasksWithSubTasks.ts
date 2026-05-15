@@ -17,7 +17,7 @@ export default function useAddTaskWithSubtasks() {
 
     const { showToast } = useToast()
 
-    const addTasksWithSubtasks = async (payload) => {
+    const addTasksWithSubtasks = async (payload, goToNextScreen) => {
         startLoading()
 
         try {
@@ -70,6 +70,7 @@ export default function useAddTaskWithSubtasks() {
             stopLoading()
 
             showToast('Tasks added successfully.', 'success')
+            goToNextScreen()
         } catch (error) {
             stopLoading()
 

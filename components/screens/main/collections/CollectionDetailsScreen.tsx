@@ -128,7 +128,6 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                         <TouchableOpacity
                             onPress={() =>
                                 navigation.navigate('CollectionTaskAdd', {
-                                    from: 'collection',
                                     item: item,
                                 })
                             }
