@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
@@ -7,6 +7,7 @@ import FormTextInput from '@/components/shared/FormTextInput'
 import CustomLoader from '@/components/shared/CustomLoader'
 import LoaderStore from '@/stores/LoaderStore'
 import useAddTaskWithSubtasks from '@/hooks/main/useAddTasksWithSubTasks'
+import { useFocusEffect } from '@react-navigation/core'
 
 type Subtask = {
     id: string
@@ -21,6 +22,7 @@ type Task = {
 
 export default function TaskAddScreen({ route, navigation }) {
     const params = route.params
+    console.log('task add params:', params)
 
     const isLoading = LoaderStore((state) => state.isLoading)
 
@@ -33,79 +35,18 @@ export default function TaskAddScreen({ route, navigation }) {
     const [tasks, setTasks] = useState<Task[]>([])
     console.log('tasks', JSON.stringify(tasks, null, 2))
 
-    const addTask = () => {
-        setTasks((prev) => [
-            ...prev,
-            {
-                id: createTaskId(),
-                title: '',
-                subtasks: [],
-            },
-        ])
-    }
+    useFocusEffect(
+        useCallback(() => {
+            // reset every time screen is opened
+            setTasks([])
+            taskIdCounter.current = 0
+            subtaskIdCounter.current = 0
 
-    const updateTaskTitle = (taskId: string, title: string) => {
-        setTasks((prev) =>
-            prev.map((task) => (task.id === taskId ? { ...task, title } : task))
-        )
-    }
-
-    const addSubtask = (taskId: string) => {
-        setTasks((prev) =>
-            prev.map((task) =>
-                task.id === taskId
-                    ? {
-                          ...task,
-                          subtasks: [
-                              ...task.subtasks,
-                              {
-                                  id: createSubtaskId(),
-                                  title: '',
-                              },
-                          ],
-                      }
-                    : task
-            )
-        )
-    }
-
-    const updateSubtask = (
-        taskId: string,
-        subtaskId: string,
-        title: string
-    ) => {
-        setTasks((prev) =>
-            prev.map((task) => {
-                if (task.id !== taskId) return task
-
-                return {
-                    ...task,
-                    subtasks: task.subtasks.map((st) =>
-                        st.id === subtaskId ? { ...st, title } : st
-                    ),
-                }
-            })
-        )
-    }
-
-    const removeTask = (taskId: string) => {
-        setTasks((prev) => prev.filter((t) => t.id !== taskId))
-    }
-
-    const removeSubtask = (taskId: string, subtaskId: string) => {
-        setTasks((prev) =>
-            prev.map((task) =>
-                task.id === taskId
-                    ? {
-                          ...task,
-                          subtasks: task.subtasks.filter(
-                              (st) => st.id !== subtaskId
-                          ),
-                      }
-                    : task
-            )
-        )
-    }
+            return () => {
+                // optional cleanup when leaving screen
+            }
+        }, [])
+    )
 
     const { addTasksWithSubtasks } = useAddTaskWithSubtasks()
     const handleSubmitTasks = async () => {
@@ -322,6 +263,7 @@ export default function TaskAddScreen({ route, navigation }) {
                                 </View>
                             ))
                         )}
+                        <View className="w-full border-b border-white mb-4 mt-4" />
                         <TouchableOpacity
                             onPress={() =>
                                 setTasks([
