@@ -4,6 +4,8 @@ export const db = SQLite.openDatabaseSync('app.db')
 
 export const initDB = async () => {
     await db.execAsync(`
+        PRAGMA foreign_keys = ON;
+        
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE,
@@ -33,14 +35,20 @@ export const initDB = async () => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             collection_id INTEGER,
             name TEXT,
-            status TEXT
+            status TEXT,
+            FOREIGN KEY (collection_id)
+                REFERENCES collections(id)
+                ON DELETE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS subtasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             task_id INTEGER,
             name TEXT,
-            status TEXT
+            status TEXT,
+            FOREIGN KEY (task_id)
+                REFERENCES tasks(id)
+                ON DELETE CASCADE
         );
     `)
 

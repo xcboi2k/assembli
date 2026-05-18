@@ -120,28 +120,11 @@ export const updateTaskStatus = async (
     }
 }
 
-export const deleteTask = async (data: any): Promise<AppResponse> => {
+export const deleteTask = async (taskId: number): Promise<AppResponse> => {
     try {
-        if (!data.id) {
-            return {
-                success: false,
-                message: 'Task id is required',
-            }
-        }
-
-        if (!data.collection_id) {
-            return {
-                success: false,
-                message: 'Collection is required',
-            }
-        }
-
-        await db.runAsync(`DELETE FROM subtasks WHERE task_id = ?`, [data.id])
-
-        const result = await db.runAsync(
-            `DELETE FROM tasks WHERE id = ? AND collection_id = ?`,
-            [data.id, data.collection_id]
-        )
+        const result = await db.runAsync(`DELETE FROM tasks WHERE id = ?`, [
+            taskId,
+        ])
 
         if (result.changes === 0) {
             return {

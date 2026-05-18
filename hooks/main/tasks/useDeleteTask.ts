@@ -15,10 +15,7 @@ export default function useDeleteTask() {
     const deleteTask = async (id, collectionId, goToNextScreen) => {
         startLoading()
         try {
-            const response = await deleteTaskRecord({
-                id: Number(id),
-                collection_id: Number(collectionId),
-            })
+            const response = await deleteTaskRecord(Number(id))
 
             if (!response.success) {
                 stopLoading()

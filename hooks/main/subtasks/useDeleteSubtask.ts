@@ -15,10 +15,7 @@ export default function useDeleteSubtask() {
     const deleteSubtask = async (id, taskId, goToNextScreen) => {
         startLoading()
         try {
-            const response = await deleteSubtaskRecord({
-                id: Number(id),
-                task_id: Number(taskId),
-            })
+            const response = await deleteSubtaskRecord(Number(id))
 
             if (!response.success) {
                 stopLoading()
