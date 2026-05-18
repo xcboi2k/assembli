@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/react-native'
 import UserStore from '@/stores/UserStore'
 import LoaderStore from '@/stores/LoaderStore'
 import { useToast } from '@/providers/ToastProvider'
-import { updateTask as updateTaskRecord } from '@/backend/collections/tasks'
+import { updateTaskName, updateTaskStatus } from '@/backend/collections/tasks'
 
 export default function useUpdateTask() {
     const user = UserStore((state) => state.user)
@@ -12,21 +12,21 @@ export default function useUpdateTask() {
 
     const { showToast } = useToast()
 
-    const updateTask = async (id, values, resetForm, goToNextScreen) => {
+    const updateTaskNameRecord = async (
+        id,
+        values,
+        resetForm,
+        goToNextScreen
+    ) => {
         startLoading()
         try {
-            const response = await updateTaskRecord({
-                id: Number(id),
-                collection_id: values.collection_id,
-                name: values.name,
-                status: values.status,
-            })
+            const response = await updateTaskName(Number(id), values.name)
 
             if (!response.success) {
                 stopLoading()
                 showToast(response.message, 'error')
                 Sentry.captureException(
-                    `Failed to update task for ${user?.username ?? 'unknown'}. ${response.message}`
+                    `Failed to update task name for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
             } else {
                 resetForm()
@@ -39,10 +39,42 @@ export default function useUpdateTask() {
             await new Promise((resolve) => setTimeout(resolve, 100))
             showToast(`Service not available right now.`, 'error')
             Sentry.captureException(
-                `Failed to update task for ${user?.username ?? 'unknown'}. Service not available right now. ${error}`
+                `Failed to update task name for ${user?.username ?? 'unknown'}. Service not available right now. ${error}`
             )
         }
     }
 
-    return { updateTask }
+    const updateTaskStatusRecord = async (
+        id,
+        status,
+        resetForm,
+        goToNextScreen
+    ) => {
+        startLoading()
+        try {
+            const response = await updateTaskStatus(Number(id), status)
+
+            if (!response.success) {
+                stopLoading()
+                showToast(response.message, 'error')
+                Sentry.captureException(
+                    `Failed to update task status for ${user?.username ?? 'unknown'}. ${response.message}`
+                )
+            } else {
+                resetForm()
+                stopLoading()
+                showToast(response.message, 'success')
+                goToNextScreen()
+            }
+        } catch (error) {
+            stopLoading()
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            showToast(`Service not available right now.`, 'error')
+            Sentry.captureException(
+                `Failed to update task status for ${user?.username ?? 'unknown'}. Service not available right now. ${error}`
+            )
+        }
+    }
+
+    return { updateTaskNameRecord, updateTaskStatusRecord }
 }

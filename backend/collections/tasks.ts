@@ -1,7 +1,9 @@
 import { db } from '../db'
 import { AppResponse, handleDBError } from '../error-system'
 
-export const createTask = async (data: any): Promise<AppResponse<{ id: number }>> => {
+export const createTask = async (
+    data: any
+): Promise<AppResponse<{ id: number }>> => {
     try {
         if (!data.collection_id) {
             return {
@@ -34,23 +36,19 @@ export const createTask = async (data: any): Promise<AppResponse<{ id: number }>
     }
 }
 
-export const updateTask = async (data: any): Promise<AppResponse> => {
+export const updateTaskName = async (
+    taskId: number,
+    name: string
+): Promise<AppResponse> => {
     try {
-        if (!data.id) {
+        if (!taskId) {
             return {
                 success: false,
                 message: 'Task id is required',
             }
         }
 
-        if (!data.collection_id) {
-            return {
-                success: false,
-                message: 'Collection is required',
-            }
-        }
-
-        if (!data.name) {
+        if (!name.trim()) {
             return {
                 success: false,
                 message: 'Task name is required',
@@ -58,13 +56,10 @@ export const updateTask = async (data: any): Promise<AppResponse> => {
         }
 
         const result = await db.runAsync(
-            `UPDATE tasks SET name = ?, status = ? WHERE id = ? AND collection_id = ?`,
-            [
-                data.name,
-                data.status || 'pending',
-                data.id,
-                data.collection_id,
-            ]
+            `UPDATE tasks
+             SET name = ?
+             WHERE id = ?`,
+            [name.trim(), taskId]
         )
 
         if (result.changes === 0) {
@@ -76,10 +71,52 @@ export const updateTask = async (data: any): Promise<AppResponse> => {
 
         return {
             success: true,
-            message: 'Task updated',
+            message: 'Task name updated',
         }
     } catch (err) {
-        return handleDBError(err, 'Update task')
+        return handleDBError(err, 'Update task name')
+    }
+}
+
+export const updateTaskStatus = async (
+    taskId: number,
+    status: string
+): Promise<AppResponse> => {
+    try {
+        if (!taskId) {
+            return {
+                success: false,
+                message: 'Task id is required',
+            }
+        }
+
+        if (!status.trim()) {
+            return {
+                success: false,
+                message: 'Task status is required',
+            }
+        }
+
+        const result = await db.runAsync(
+            `UPDATE tasks
+             SET status = ?
+             WHERE id = ?`,
+            [status, taskId]
+        )
+
+        if (result.changes === 0) {
+            return {
+                success: false,
+                message: 'Task not found',
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Task status updated',
+        }
+    } catch (err) {
+        return handleDBError(err, 'Update task status')
     }
 }
 

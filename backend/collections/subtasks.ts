@@ -1,7 +1,9 @@
 import { db } from '../db'
 import { AppResponse, handleDBError } from '../error-system'
 
-export const createSubtask = async (data: any): Promise<AppResponse<{ id: number }>> => {
+export const createSubtask = async (
+    data: any
+): Promise<AppResponse<{ id: number }>> => {
     try {
         if (!data.task_id) {
             return {
@@ -34,23 +36,19 @@ export const createSubtask = async (data: any): Promise<AppResponse<{ id: number
     }
 }
 
-export const updateSubtask = async (data: any): Promise<AppResponse> => {
+export const updateSubtaskName = async (
+    subtaskId: number,
+    name: string
+): Promise<AppResponse> => {
     try {
-        if (!data.id) {
+        if (!subtaskId) {
             return {
                 success: false,
                 message: 'Subtask id is required',
             }
         }
 
-        if (!data.task_id) {
-            return {
-                success: false,
-                message: 'Task is required',
-            }
-        }
-
-        if (!data.name) {
+        if (!name.trim()) {
             return {
                 success: false,
                 message: 'Subtask name is required',
@@ -58,13 +56,10 @@ export const updateSubtask = async (data: any): Promise<AppResponse> => {
         }
 
         const result = await db.runAsync(
-            `UPDATE subtasks SET name = ?, status = ? WHERE id = ? AND task_id = ?`,
-            [
-                data.name,
-                data.status || 'pending',
-                data.id,
-                data.task_id,
-            ]
+            `UPDATE subtasks
+             SET name = ?
+             WHERE id = ?`,
+            [name.trim(), subtaskId]
         )
 
         if (result.changes === 0) {
@@ -76,10 +71,52 @@ export const updateSubtask = async (data: any): Promise<AppResponse> => {
 
         return {
             success: true,
-            message: 'Subtask updated',
+            message: 'Subtask name updated',
         }
     } catch (err) {
-        return handleDBError(err, 'Update subtask')
+        return handleDBError(err, 'Update subtask name')
+    }
+}
+
+export const updateSubtaskStatus = async (
+    subtaskId: number,
+    status: string
+): Promise<AppResponse> => {
+    try {
+        if (!subtaskId) {
+            return {
+                success: false,
+                message: 'Subtask id is required',
+            }
+        }
+
+        if (!status.trim()) {
+            return {
+                success: false,
+                message: 'Subtask status is required',
+            }
+        }
+
+        const result = await db.runAsync(
+            `UPDATE subtasks
+             SET status = ?
+             WHERE id = ?`,
+            [status, subtaskId]
+        )
+
+        if (result.changes === 0) {
+            return {
+                success: false,
+                message: 'Subtask not found',
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Subtask status updated',
+        }
+    } catch (err) {
+        return handleDBError(err, 'Update subtask status')
     }
 }
 
