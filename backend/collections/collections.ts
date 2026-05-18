@@ -216,3 +216,37 @@ export const getCollectionsByUserId = async (
         return handleDBError(err, 'Load collections')
     }
 }
+
+export const getCollectionById = async (
+    collectionId: number
+): Promise<AppResponse<any>> => {
+    try {
+        if (collectionId == null || Number.isNaN(Number(collectionId))) {
+            return {
+                success: false,
+                message: 'Collection id is required',
+            }
+        }
+
+        const row = await db.getFirstAsync(
+            `SELECT * FROM collections
+             WHERE id = ?`,
+            [collectionId]
+        )
+
+        if (!row) {
+            return {
+                success: false,
+                message: 'Collection not found',
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Collection loaded',
+            data: row as any,
+        }
+    } catch (err) {
+        return handleDBError(err, 'Load collection')
+    }
+}
