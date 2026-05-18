@@ -1,21 +1,20 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
+import CustomLoader from '@/components/shared/CustomLoader'
 import Header from '@/components/shared/Header'
 import BuildChecklist from '@/components/shared/collection/BuildChecklist'
-import TelemetryPanel from '@/components/shared/collection/TelemetryPanel'
-import { SessionHistory } from '@/components/shared/collection/SessionHistory'
-import { Feather } from '@expo/vector-icons'
-import useGetTasks from '@/hooks/main/tasks/useGetTasks'
-import useGetTasksWithSubtasks from '@/hooks/main/useGetTasksWithSubTasks'
-import { useFocusEffect } from '@react-navigation/core'
 import BuildChecklistSkeleton from '@/components/skeletons/BuildChecklistSkeleton'
 import useGetCollectionItem from '@/hooks/main/collections/useGetCollectionItem'
-import CustomLoader from '@/components/shared/CustomLoader'
+import useGetTasksWithSubtasks from '@/hooks/main/useGetTasksWithSubTasks'
 import LoaderStore from '@/stores/LoaderStore'
+import { Feather } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/core'
 
 export default function CollectionDetailsScreen({ route, navigation }) {
     const id = route.params
+
+    const [refreshKey, setRefreshKey] = useState(0)
 
     const isLoading = LoaderStore((state) => state.isLoading)
 
@@ -54,7 +53,7 @@ export default function CollectionDetailsScreen({ route, navigation }) {
         loading: loadingTask,
         getTasksWithSubtasks,
     } = useGetTasksWithSubtasks()
-    console.log('tasks:', JSON.stringify(tasks, null, 2))
+    // console.log('tasks:', JSON.stringify(tasks, null, 2))
 
     useFocusEffect(
         useCallback(() => {
@@ -65,7 +64,7 @@ export default function CollectionDetailsScreen({ route, navigation }) {
             return () => {
                 console.log('Unmount Collection Details')
             }
-        }, [])
+        }, [refreshKey])
     )
 
     return (
@@ -126,7 +125,7 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                                 navigation.navigate('CollectionTaskAdd', id)
                             }
                             activeOpacity={0.85}
-                            className="border border-dashed border-primary-500/40 bg-background-200 p-5 items-center justify-center"
+                            className="border border-dashed border-primary-500/40 bg-background-200 p-5 items-center justify-center mb-4"
                         >
                             {/* ICON */}
                             <View className="w-14 h-14 border border-primary-400 items-center justify-center bg-primary-500/10 mb-4">
@@ -165,7 +164,17 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                     {loadingTask ? (
                         <BuildChecklistSkeleton />
                     ) : (
-                        <BuildChecklist items={tasks} />
+                        <>
+                            {tasks.length !== 0 && (
+                                <BuildChecklist
+                                    items={tasks}
+                                    updateRefreshKey={() => {
+                                        const newKey = Math.random().toString()
+                                        setRefreshKey(newKey)
+                                    }}
+                                />
+                            )}
+                        </>
                     )}
                     {/* <BuildChecklistSkeleton /> */}
                     {/* <TelemetryPanel

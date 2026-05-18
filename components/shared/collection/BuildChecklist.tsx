@@ -1,10 +1,14 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { updateSubtaskStatus } from '@/backend/collections/subtasks'
+import useDeleteSubtask from '@/hooks/main/subtasks/useDeleteSubtask'
+import useUpdateSubtask from '@/hooks/main/subtasks/useUpdateSubtask'
+import useDeleteTask from '@/hooks/main/tasks/useDeleteTask'
+import useUpdateTask from '@/hooks/main/tasks/useUpdateTask'
 import { Feather } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useEffect, useState } from 'react'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-export default function BuildChecklist({ items }) {
+export default function BuildChecklist({ items, updateRefreshKey }) {
     const [isEditMode, setIsEditMode] = useState(false)
     console.log('edit', isEditMode)
 
@@ -21,6 +25,17 @@ export default function BuildChecklist({ items }) {
             setEditingSubtaskId(null)
         }
     }, [isEditMode])
+
+    const { updateTaskNameRecord, updateTaskStatusRecord } = useUpdateTask()
+    const { deleteTask } = useDeleteTask()
+    const { updateSubtaskNameRecord, updateSubtaskStatusRecord } =
+        useUpdateSubtask()
+    const { deleteSubtask } = useDeleteSubtask()
+
+    const goToNextScreen = () => {
+        const newKey = Math.random().toString()
+        updateRefreshKey()
+    }
 
     return (
         <View className="border border-[#1E293B] bg-[#1A1C1E] mb-4">
@@ -86,19 +101,22 @@ export default function BuildChecklist({ items }) {
 
                             {/* ACTIONS */}
                             {isEditMode && (
-                                <View className="flex-row ml-2 w-[30%] border border-white">
+                                <View className="flex-row ml-2 items-center">
                                     {editingTaskId === item.id ? (
                                         <TouchableOpacity
                                             onPress={() => {
+                                                updateTaskNameRecord(
+                                                    item.id,
+                                                    taskDraftTitle,
+                                                    goToNextScreen
+                                                )
                                                 setEditingTaskId(null)
                                             }}
-                                            className="mr-2"
+                                            className="mr-3"
                                         >
-                                            <Feather
-                                                name="check"
-                                                size={16}
-                                                color="#34D399"
-                                            />
+                                            <Text className="text-green-400 text-xs uppercase">
+                                                Save
+                                            </Text>
                                         </TouchableOpacity>
                                     ) : (
                                         <TouchableOpacity
@@ -106,22 +124,23 @@ export default function BuildChecklist({ items }) {
                                                 setEditingTaskId(item.id)
                                                 setTaskDraftTitle(item.name)
                                             }}
-                                            className="mr-2"
+                                            className="mr-3"
                                         >
-                                            <Feather
-                                                name="edit-2"
-                                                size={16}
-                                                color="#ADC6FF"
-                                            />
+                                            <Text className="text-blue-300 text-xs uppercase">
+                                                Edit
+                                            </Text>
                                         </TouchableOpacity>
                                     )}
 
-                                    <TouchableOpacity>
-                                        <Feather
-                                            name="trash-2"
-                                            size={16}
-                                            color="#F87171"
-                                        />
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            deleteTask(item.id, goToNextScreen)
+                                            setEditingTaskId(null)
+                                        }}
+                                    >
+                                        <Text className="text-red-400 text-xs uppercase">
+                                            Delete
+                                        </Text>
                                     </TouchableOpacity>
                                 </View>
                             )}
@@ -162,22 +181,25 @@ export default function BuildChecklist({ items }) {
 
                                               {/* ACTIONS (edit mode only) */}
                                               {isEditMode && (
-                                                  <View className="flex-row ml-2 items-center border border-white w-[30%]">
+                                                  <View className="flex-row ml-2 items-center">
                                                       {editingSubtaskId ===
                                                       sub.id ? (
                                                           <TouchableOpacity
-                                                              onPress={() =>
+                                                              onPress={() => {
+                                                                  updateSubtaskNameRecord(
+                                                                      sub.id,
+                                                                      draftSubtaskTitle,
+                                                                      goToNextScreen
+                                                                  )
                                                                   setEditingSubtaskId(
                                                                       null
                                                                   )
-                                                              }
-                                                              className="mr-2"
+                                                              }}
+                                                              className="mr-3"
                                                           >
-                                                              <Feather
-                                                                  name="check"
-                                                                  size={14}
-                                                                  color="#34D399"
-                                                              />
+                                                              <Text className="text-green-400 text-[10px] uppercase">
+                                                                  Save
+                                                              </Text>
                                                           </TouchableOpacity>
                                                       ) : (
                                                           <TouchableOpacity
@@ -189,22 +211,28 @@ export default function BuildChecklist({ items }) {
                                                                       sub.name
                                                                   )
                                                               }}
-                                                              className="mr-2"
+                                                              className="mr-3"
                                                           >
-                                                              <Feather
-                                                                  name="edit-2"
-                                                                  size={14}
-                                                                  color="#ADC6FF"
-                                                              />
+                                                              <Text className="text-blue-300 text-[10px] uppercase">
+                                                                  Edit
+                                                              </Text>
                                                           </TouchableOpacity>
                                                       )}
 
-                                                      <TouchableOpacity>
-                                                          <Feather
-                                                              name="trash-2"
-                                                              size={14}
-                                                              color="#F87171"
-                                                          />
+                                                      <TouchableOpacity
+                                                          onPress={() => {
+                                                              deleteSubtask(
+                                                                  sub.id,
+                                                                  goToNextScreen
+                                                              )
+                                                              setEditingSubtaskId(
+                                                                  null
+                                                              )
+                                                          }}
+                                                      >
+                                                          <Text className="text-red-400 text-[10px] uppercase">
+                                                              Delete
+                                                          </Text>
                                                       </TouchableOpacity>
                                                   </View>
                                               )}
@@ -238,7 +266,11 @@ export default function BuildChecklist({ items }) {
                                                               <TouchableOpacity
                                                                   key={status}
                                                                   onPress={() => {
-                                                                      // updateSubtaskStatus(sub.id, status)
+                                                                      updateSubtaskStatusRecord(
+                                                                          sub.id,
+                                                                          status,
+                                                                          goToNextScreen
+                                                                      )
                                                                   }}
                                                                   className={`px-2 py-1 border mr-1 ${
                                                                       active

@@ -16,15 +16,10 @@ export default function useUpdateSubtask() {
 
     const { showToast } = useToast()
 
-    const updateSubtaskNameRecord = async (
-        id,
-        values,
-        resetForm,
-        goToNextScreen
-    ) => {
+    const updateSubtaskNameRecord = async (id, name, goToNextScreen) => {
         startLoading()
         try {
-            const response = await updateSubtaskName(Number(id), values.name)
+            const response = await updateSubtaskName(Number(id), name)
 
             if (!response.success) {
                 stopLoading()
@@ -33,7 +28,6 @@ export default function useUpdateSubtask() {
                     `Failed to update subtask name for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
             } else {
-                resetForm()
                 stopLoading()
                 showToast(response.message, 'success')
                 goToNextScreen()
@@ -48,12 +42,7 @@ export default function useUpdateSubtask() {
         }
     }
 
-    const updateSubtaskStatusRecord = async (
-        id,
-        status,
-        resetForm,
-        goToNextScreen
-    ) => {
+    const updateSubtaskStatusRecord = async (id, status, goToNextScreen) => {
         startLoading()
         try {
             const response = await updateSubtaskStatus(Number(id), status)
@@ -65,7 +54,6 @@ export default function useUpdateSubtask() {
                     `Failed to update subtask status for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
             } else {
-                resetForm()
                 stopLoading()
                 showToast(response.message, 'success')
                 goToNextScreen()

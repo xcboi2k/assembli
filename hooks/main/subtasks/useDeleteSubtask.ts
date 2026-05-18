@@ -12,7 +12,7 @@ export default function useDeleteSubtask() {
 
     const { showToast } = useToast()
 
-    const deleteSubtask = async (id, taskId, goToNextScreen) => {
+    const deleteSubtask = async (id, goToNextScreen) => {
         startLoading()
         try {
             const response = await deleteSubtaskRecord(Number(id))

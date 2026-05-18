@@ -12,15 +12,10 @@ export default function useUpdateTask() {
 
     const { showToast } = useToast()
 
-    const updateTaskNameRecord = async (
-        id,
-        values,
-        resetForm,
-        goToNextScreen
-    ) => {
+    const updateTaskNameRecord = async (id, name, goToNextScreen) => {
         startLoading()
         try {
-            const response = await updateTaskName(Number(id), values.name)
+            const response = await updateTaskName(Number(id), name)
 
             if (!response.success) {
                 stopLoading()
@@ -29,7 +24,6 @@ export default function useUpdateTask() {
                     `Failed to update task name for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
             } else {
-                resetForm()
                 stopLoading()
                 showToast(response.message, 'success')
                 goToNextScreen()
@@ -44,12 +38,7 @@ export default function useUpdateTask() {
         }
     }
 
-    const updateTaskStatusRecord = async (
-        id,
-        status,
-        resetForm,
-        goToNextScreen
-    ) => {
+    const updateTaskStatusRecord = async (id, status, goToNextScreen) => {
         startLoading()
         try {
             const response = await updateTaskStatus(Number(id), status)
@@ -61,7 +50,6 @@ export default function useUpdateTask() {
                     `Failed to update task status for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
             } else {
-                resetForm()
                 stopLoading()
                 showToast(response.message, 'success')
                 goToNextScreen()
