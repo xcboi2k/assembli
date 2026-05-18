@@ -9,30 +9,15 @@ import { Feather } from '@expo/vector-icons'
 import useGetTasks from '@/hooks/main/tasks/useGetTasks'
 import useGetTasksWithSubtasks from '@/hooks/main/useGetTasksWithSubTasks'
 import { useFocusEffect } from '@react-navigation/core'
+import BuildChecklistSkeleton from '@/components/skeletons/BuildChecklistSkeleton'
+import useGetCollectionItem from '@/hooks/main/collections/useGetCollectionItem'
+import CustomLoader from '@/components/shared/CustomLoader'
+import LoaderStore from '@/stores/LoaderStore'
 
 export default function CollectionDetailsScreen({ route, navigation }) {
-    const item = route.params
-    const checklistData = [
-        {
-            title: 'Head Unit Assembly',
-            done: true,
-            subtasks: [
-                {
-                    title: 'Internal Frame & LED Integration',
-                    status: 'COMPLETE [14:42]',
-                },
-            ],
-        },
-        {
-            title: 'Lower Limb Logistics',
-            done: false,
-            subtasks: [
-                { title: 'Hip Actuator Linkage', status: 'IN_PROGRESS' },
-                { title: 'Knee Joint Articulation Layer', status: 'QUEUED' },
-                { title: 'Ankle Piston Calibration', status: 'QUEUED' },
-            ],
-        },
-    ]
+    const id = route.params
+
+    const isLoading = LoaderStore((state) => state.isLoading)
 
     const telemetryStats = [
         { label: 'TOTAL_TIME', value: '42:18:04' },
@@ -58,13 +43,24 @@ export default function CollectionDetailsScreen({ route, navigation }) {
         },
     ]
 
-    const { tasks, loading, getTasksWithSubtasks } = useGetTasksWithSubtasks()
+    const {
+        data,
+        loading: loadingDetails,
+        getCollectionItem,
+    } = useGetCollectionItem()
+
+    const {
+        tasks,
+        loading: loadingTask,
+        getTasksWithSubtasks,
+    } = useGetTasksWithSubtasks()
     console.log('tasks:', JSON.stringify(tasks, null, 2))
 
     useFocusEffect(
         useCallback(() => {
             console.log('Mount Collection Details')
-            getTasksWithSubtasks(item.id)
+            getCollectionItem(id)
+            getTasksWithSubtasks(id)
 
             return () => {
                 console.log('Unmount Collection Details')
@@ -81,13 +77,13 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                         <View className="flex-row items-start justify-between mb-2">
                             {/* TITLE */}
                             <Text className="flex-1 text-[32px] text-white font-headingBold uppercase pr-4">
-                                {item.name}
+                                {data?.name}
                             </Text>
 
                             {/* EDIT BUTTON */}
                             <TouchableOpacity
                                 onPress={() =>
-                                    navigation.navigate('CollectionEdit', item)
+                                    navigation.navigate('CollectionEdit', data)
                                 }
                                 className="w-11 h-11 border border-primary-500/40 bg-primary-500/5 items-center justify-center"
                             >
@@ -127,9 +123,7 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                     {tasks.length === 0 ? (
                         <TouchableOpacity
                             onPress={() =>
-                                navigation.navigate('CollectionTaskAdd', {
-                                    item: item,
-                                })
+                                navigation.navigate('CollectionTaskAdd', id)
                             }
                             activeOpacity={0.85}
                             className="border border-dashed border-primary-500/40 bg-background-200 p-5 items-center justify-center"
@@ -168,13 +162,19 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                             </View>
                         </TouchableOpacity>
                     ) : null}
-                    {/* <BuildChecklist items={checklistData} />
-                    <TelemetryPanel
+                    {loadingTask ? (
+                        <BuildChecklistSkeleton />
+                    ) : (
+                        <BuildChecklist items={tasks} />
+                    )}
+                    {/* <BuildChecklistSkeleton /> */}
+                    {/* <TelemetryPanel
                         stats={telemetryStats}
                         breakdown={telemetryBreakdown}
                     />
                     <SessionHistory sessions={sessions} /> */}
                 </ScrollView>
+                <CustomLoader visible={isLoading} />
             </View>
         </>
     )

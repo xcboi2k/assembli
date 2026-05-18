@@ -21,8 +21,8 @@ type Task = {
 }
 
 export default function TaskAddScreen({ route, navigation }) {
-    const params = route.params
-    console.log('task add params:', params)
+    const id = route.params
+    console.log('task add params:', id)
 
     const isLoading = LoaderStore((state) => state.isLoading)
 
@@ -52,7 +52,7 @@ export default function TaskAddScreen({ route, navigation }) {
     const { addTasksWithSubtasks } = useAddTaskWithSubtasks()
     const handleSubmitTasks = async () => {
         const payload = {
-            collection_id: params.item.id,
+            collection_id: id,
             tasks: tasks.map((task) => ({
                 title: task.title,
                 subtasks: task.subtasks.map((st) => ({
@@ -62,12 +62,12 @@ export default function TaskAddScreen({ route, navigation }) {
         }
 
         await addTasksWithSubtasks(payload, () =>
-            navigation.navigate('CollectionDetails', params.item)
+            navigation.navigate('CollectionDetails', id)
         )
     }
 
     const handleBackNavigation = () => {
-        navigation.navigate('CollectionDetails', params.item)
+        navigation.navigate('CollectionDetails', id)
     }
 
     return (

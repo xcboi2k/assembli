@@ -34,8 +34,8 @@ export default function CollectionScreen() {
         }, [])
     )
 
-    const handleNavigation = (item) =>
-        navigation.navigate('CollectionDetails', item)
+    const handleNavigation = (id) =>
+        navigation.navigate('CollectionDetails', id)
 
     const { refreshing, onRefresh } = useRefresh({
         postRefresh: () => getCollectionItems(),
@@ -68,7 +68,7 @@ export default function CollectionScreen() {
                                             time="42:15:00"
                                             progress={0.9}
                                             onPress={() =>
-                                                handleNavigation(item)
+                                                handleNavigation(item.id)
                                             }
                                         />
                                     ))}
