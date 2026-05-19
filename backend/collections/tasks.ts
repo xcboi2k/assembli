@@ -80,7 +80,8 @@ export const updateTaskName = async (
 
 export const updateTaskStatus = async (
     taskId: number,
-    status: string
+    status: string,
+    completed_at: string | null = null
 ): Promise<AppResponse> => {
     try {
         if (!taskId) {
@@ -99,9 +100,10 @@ export const updateTaskStatus = async (
 
         const result = await db.runAsync(
             `UPDATE tasks
-             SET status = ?
+             SET status = ?,
+                 completed_at = ?
              WHERE id = ?`,
-            [status, taskId]
+            [status, completed_at, taskId]
         )
 
         if (result.changes === 0) {

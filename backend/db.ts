@@ -36,6 +36,7 @@ export const initDB = async () => {
             collection_id INTEGER,
             name TEXT,
             status TEXT,
+            completed_at TEXT DEFAULT NULL,
             FOREIGN KEY (collection_id)
                 REFERENCES collections(id)
                 ON DELETE CASCADE
