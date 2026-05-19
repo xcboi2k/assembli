@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/core'
 
 import useGetCollectionsTree from '@/hooks/main/useGetCollectionsTree'
 import { computeBuildProgress } from '@/helpers/computeBuildProgress'
+import CollectionDetailsHeaderSkeleton from '@/components/skeletons/CollectionDetailsHeaderSkeleton'
 
 export default function CollectionDetailsScreen({ route, navigation }) {
     const id = route.params
@@ -51,69 +52,75 @@ export default function CollectionDetailsScreen({ route, navigation }) {
             <View className="flex-1 bg-[#0F1113] p-4">
                 <ScrollView>
                     {/* TITLE */}
-                    <View className="w-full">
-                        <View className="flex-row items-start justify-between mb-2">
-                            <Text className="flex-1 text-[32px] text-white font-headingBold uppercase pr-4">
-                                {collection?.name}
-                            </Text>
-
-                            <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate(
-                                        'CollectionEdit',
-                                        collection
-                                    )
-                                }
-                                className="w-11 h-11 border border-primary-500/40 bg-primary-500/5 items-center justify-center"
-                            >
-                                <Feather
-                                    name="edit-2"
-                                    size={16}
-                                    color="#ADC6FF"
-                                />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View className="w-full flex-row justify-between items-center mb-6">
-                            <Text className="text-[12px] text-primary-200 tracking-widest font-headingBold">
-                                {buildProgress <= 0.25
-                                    ? 'CONSTRUCTION_PHASE_01'
-                                    : buildProgress <= 0.5
-                                      ? 'CONSTRUCTION_PHASE_02'
-                                      : buildProgress <= 0.75
-                                        ? 'CONSTRUCTION_PHASE_03'
-                                        : buildProgress > 0.75 &&
-                                            buildProgress < 1
-                                          ? 'CONSTRUCTION_PHASE_04'
-                                          : buildProgress === 1
-                                            ? 'COMPLETED'
-                                            : ''}
-                            </Text>
-
-                            <Text className="text-[20px] text-primary-400 tracking-widest font-bodyMedium">
-                                {(buildProgress * 100).toFixed(0)}%
-                            </Text>
-                        </View>
-                        <View className="mb-6">
-                            <View className="w-full h-[16px] bg-[#0F172A] border border-[#1E293B] mb-2">
-                                <View
-                                    className={`h-full border bg-[#3B82F6] border-[#3B82F6]`}
-                                    style={{ width: `${buildProgress * 100}%` }}
-                                />
-                            </View>
-                            <View className="w-full flex-row justify-between items-center">
-                                <Text className="text-[11px] text-[#64748B] tracking-widest mb-2 font-headingRegular">
-                                    SYSTEM_STABILITY: OPTIMAL
+                    {loading ? (
+                        <CollectionDetailsHeaderSkeleton />
+                    ) : (
+                        <View className="w-full">
+                            <View className="flex-row items-start justify-between mb-2">
+                                <Text className="flex-1 text-[32px] text-white font-headingBold uppercase pr-4">
+                                    {collection?.name}
                                 </Text>
-                                <Text className="text-[11px] text-[#64748B] tracking-widest mb-2 font-headingRegular">
-                                    {Math.round(
-                                        Math.max(0, 1 - buildProgress) * 100
-                                    )}
-                                    % REMAINING
+
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate(
+                                            'CollectionEdit',
+                                            collection
+                                        )
+                                    }
+                                    className="w-11 h-11 border border-primary-500/40 bg-primary-500/5 items-center justify-center"
+                                >
+                                    <Feather
+                                        name="edit-2"
+                                        size={16}
+                                        color="#ADC6FF"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View className="w-full flex-row justify-between items-center mb-6">
+                                <Text className="text-[12px] text-primary-200 tracking-widest font-headingBold">
+                                    {buildProgress <= 0.25
+                                        ? 'CONSTRUCTION_PHASE_01'
+                                        : buildProgress <= 0.5
+                                          ? 'CONSTRUCTION_PHASE_02'
+                                          : buildProgress <= 0.75
+                                            ? 'CONSTRUCTION_PHASE_03'
+                                            : buildProgress > 0.75 &&
+                                                buildProgress < 1
+                                              ? 'CONSTRUCTION_PHASE_04'
+                                              : buildProgress === 1
+                                                ? 'COMPLETED'
+                                                : ''}
+                                </Text>
+
+                                <Text className="text-[20px] text-primary-400 tracking-widest font-bodyMedium">
+                                    {(buildProgress * 100).toFixed(0)}%
                                 </Text>
                             </View>
+                            <View className="mb-6">
+                                <View className="w-full h-[16px] bg-[#0F172A] border border-[#1E293B] mb-2">
+                                    <View
+                                        className={`h-full border bg-[#3B82F6] border-[#3B82F6]`}
+                                        style={{
+                                            width: `${buildProgress * 100}%`,
+                                        }}
+                                    />
+                                </View>
+                                <View className="w-full flex-row justify-between items-center">
+                                    <Text className="text-[11px] text-[#64748B] tracking-widest mb-2 font-headingRegular">
+                                        SYSTEM_STABILITY: OPTIMAL
+                                    </Text>
+                                    <Text className="text-[11px] text-[#64748B] tracking-widest mb-2 font-headingRegular">
+                                        {Math.round(
+                                            Math.max(0, 1 - buildProgress) * 100
+                                        )}
+                                        % REMAINING
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
-                    </View>
+                    )}
 
                     {/* EMPTY STATE */}
                     {collection?.tasks?.length === 0 ? (
