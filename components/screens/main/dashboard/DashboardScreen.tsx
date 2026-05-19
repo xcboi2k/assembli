@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { ScrollView, Text, View } from 'react-native'
-import { useNavigation } from '@react-navigation/core'
+import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import Header from '@/components/shared/Header'
@@ -13,6 +13,7 @@ import LogItem from '@/components/shared/dashboard/LogItem'
 import AddCollectionCard from '@/components/shared/dashboard/AddCollectionCard'
 
 import { DashboardStackParamList } from '@/navigation'
+import useGetDashboardChartsData from '@/hooks/main/useGetDashboardChartsData'
 
 export default function DashboardScreen() {
     const navigation =
@@ -22,6 +23,21 @@ export default function DashboardScreen() {
         date: `2026-01-${i + 1}`,
         value: Math.floor(Math.random() * 5), // 0–4
     }))
+
+    const { loading, analytics, refetch } = useGetDashboardChartsData()
+
+    console.log('anayltics', analytics)
+
+    useFocusEffect(
+        useCallback(() => {
+            console.log('Mount Dashboard')
+            refetch()
+
+            return () => {
+                console.log('Unmount Dashboard')
+            }
+        }, [])
+    )
 
     return (
         <>
@@ -33,43 +49,59 @@ export default function DashboardScreen() {
                             navigation.navigate('DashboardCollectionAdd')
                         }
                     />
-                    {/* <BacklogCard
-                        variant="current"
-                        subtitle="CURRENT_PROJECT"
-                        title="MG WING ZERO EW"
-                        progress={0.65}
-                        progressLabel="BUILDING_PHASE"
-                        badgeText="65% COMPLETE"
-                    />
-                    <BacklogCard
-                        variant="new"
-                        subtitle="SYSTEM_INITIALIZATION"
-                        title="HG ZAKU 1"
-                        progress={1}
-                        progressLabel="ACQUIRED_PHASE"
-                        badgeText="100% COMPLETE"
-                    />
-                    <BacklogCard
-                        variant="completed"
-                        subtitle="FINISHED_PROJECT"
-                        title="MG THE-O"
-                        progress={1}
-                        progressLabel="DISPLAYING_PHASE"
-                        badgeText="100% COMPLETE"
-                    />
+                    {analytics?.highest && (
+                        <BacklogCard
+                            variant="current"
+                            subtitle="CURRENT_PROJECT"
+                            title={analytics?.highest.name}
+                            progress={analytics?.highest.progress}
+                            progressLabel="BUILDING_PHASE"
+                            badgeText={`${analytics?.highest.progress * 100}% COMPLETE`}
+                        />
+                    )}
+                    {analytics?.lowest && (
+                        <BacklogCard
+                            variant="current"
+                            subtitle="SYSTEM_INITIALIZATION"
+                            title={analytics?.lowest.name}
+                            progress={analytics?.lowest.progress}
+                            progressLabel="BUILDING_PHASE"
+                            badgeText={`${analytics?.lowest.progress * 100}% COMPLETE`}
+                        />
+                    )}
+                    {analytics?.recentCompleted && (
+                        <BacklogCard
+                            variant="completed"
+                            subtitle="FINISHED_PROJECT"
+                            title={analytics?.lowest.name}
+                            progress={1}
+                            progressLabel="DISPLAYING_PHASE"
+                            badgeText="100% COMPLETE"
+                        />
+                    )}
                     <Heatmap
                         title="BUILD_ACTIVITY_LOG"
-                        data={heatmapData}
+                        data={analytics?.heatMapData}
                         maxValue={4}
                     />
 
                     <View className="w-full flex-row justify-between mb-4">
-                        <StatCard label="ACQUIRED" value="42" />
-                        <StatCard label="ONGOING" value="03" highlight />
-                        <StatCard label="COMPLETED" value="128" />
+                        <StatCard
+                            label="ACQUIRED"
+                            value={analytics?.stats.acquired}
+                        />
+                        <StatCard
+                            label="ONGOING"
+                            value={analytics?.stats.ongoing}
+                            highlight
+                        />
+                        <StatCard
+                            label="COMPLETED"
+                            value={analytics?.stats.completed}
+                        />
                     </View>
 
-                    <Section title="UPCOMING_TASKS" showAdd>
+                    {/* <Section title="UPCOMING_TASKS" showAdd>
                         <TaskItem
                             title="SANDINI._FINISH_WIN!_S"
                             tag="ALPHA-1"
