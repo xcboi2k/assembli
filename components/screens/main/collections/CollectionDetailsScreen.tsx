@@ -14,7 +14,7 @@ import { useFocusEffect } from '@react-navigation/core'
 export default function CollectionDetailsScreen({ route, navigation }) {
     const id = route.params
 
-    const [refreshKey, setRefreshKey] = useState(0)
+    const [refreshKey, setRefreshKey] = useState('0')
 
     const isLoading = LoaderStore((state) => state.isLoading)
 

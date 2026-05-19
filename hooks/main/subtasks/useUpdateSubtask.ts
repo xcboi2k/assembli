@@ -5,9 +5,10 @@ import LoaderStore from '@/stores/LoaderStore'
 import { useToast } from '@/providers/ToastProvider'
 import {
     updateSubtaskName,
-    updateSubtask as updateSubtaskRecord,
     updateSubtaskStatus,
 } from '@/backend/collections/subtasks'
+import { syncTaskStatusFromSubtasks } from '@/helpers/syncTaskStatusFromSubtasks'
+import useUpdateTask from '../tasks/useUpdateTask'
 
 export default function useUpdateSubtask() {
     const user = UserStore((state) => state.user)
@@ -56,6 +57,7 @@ export default function useUpdateSubtask() {
             } else {
                 stopLoading()
                 showToast(response.message, 'success')
+                syncTaskStatusFromSubtasks(task)
                 goToNextScreen()
             }
         } catch (error) {

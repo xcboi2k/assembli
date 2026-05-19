@@ -38,10 +38,14 @@ export default function useUpdateTask() {
         }
     }
 
-    const updateTaskStatusRecord = async (id, status, goToNextScreen) => {
+    const updateTaskStatusRecord = async (id, status, completedDate) => {
         startLoading()
         try {
-            const response = await updateTaskStatus(Number(id), status)
+            const response = await updateTaskStatus(
+                Number(id),
+                status,
+                completedDate
+            )
 
             if (!response.success) {
                 stopLoading()
@@ -52,7 +56,6 @@ export default function useUpdateTask() {
             } else {
                 stopLoading()
                 showToast(response.message, 'success')
-                goToNextScreen()
             }
         } catch (error) {
             stopLoading()
