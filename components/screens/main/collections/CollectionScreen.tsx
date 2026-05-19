@@ -13,6 +13,8 @@ import { CollectionsStackParamList } from '@/navigation'
 import useGetCollectionItems from '@/hooks/main/collections/useGetCollectionItems'
 import { useRefresh } from '@/hooks/useRefresh'
 import CollectionSkeleton from '@/components/skeletons/CollectionSkeleton'
+import useGetCollectionsTree from '@/hooks/main/useGetCollectionsTree'
+import { computeBuildProgress } from '@/helpers/computeBuildProgress'
 
 export default function CollectionScreen() {
     const navigation =
@@ -20,13 +22,13 @@ export default function CollectionScreen() {
 
     const [activeTab, setActiveTab] = useState('ALL')
 
-    const { data, loading, getCollectionItems } = useGetCollectionItems()
+    const { getByUserId, data, loading } = useGetCollectionsTree()
     console.log('collection data:', data)
 
     useFocusEffect(
         useCallback(() => {
             console.log('Mount Collection')
-            getCollectionItems()
+            getByUserId()
 
             return () => {
                 console.log('Unmount Collection')
@@ -38,8 +40,12 @@ export default function CollectionScreen() {
         navigation.navigate('CollectionDetails', id)
 
     const { refreshing, onRefresh } = useRefresh({
-        postRefresh: () => getCollectionItems(),
+        postRefresh: () => getByUserId(),
     })
+
+    const collection = data?.[0] ?? null
+
+    console.log('collection:', collection)
 
     return (
         <>
@@ -61,12 +67,17 @@ export default function CollectionScreen() {
                                     {data?.map((item, index) => (
                                         <CollectionItem
                                             key={index}
-                                            variant="displaying"
+                                            variant={
+                                                item?.status
+                                                    ? item?.status.lowercase()
+                                                    : 'pending'
+                                            }
                                             header={`UNIT_${item.id}`}
                                             title={item.name}
                                             subtitle={item.series}
-                                            time="42:15:00"
-                                            progress={0.9}
+                                            progress={computeBuildProgress(
+                                                item?.tasks
+                                            )}
                                             onPress={() =>
                                                 handleNavigation(item.id)
                                             }

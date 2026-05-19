@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 
-type Variant = 'displaying' | 'started' | 'in box'
+type Variant = 'completed' | 'in_progress' | 'pending'
 type Props = {
-    variant?: 'displaying' | 'started' | 'in box'
+    variant?: Variant
     header?: string
     title?: string
     subtitle?: string
@@ -14,22 +14,22 @@ type Props = {
 }
 
 const variantStyles = {
-    displaying: {
+    completed: {
         badge: 'bg-[#3B82F6]',
         progress: 'bg-[#3B82F6] border-[#3B82F6]',
     },
-    started: {
+    in_progress: {
         badge: 'bg-secondary-500',
         progress: 'bg-secondary-300 border-secondary-300',
     },
-    'in box': {
+    pending: {
         badge: 'bg-neutral-700',
         progress: 'bg-neutral-500 border-neutral-500',
     },
 }
 
 export default function CollectionItem({
-    variant = 'displaying',
+    variant = 'pending',
     header,
     title,
     subtitle,
