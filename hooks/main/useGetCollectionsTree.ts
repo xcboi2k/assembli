@@ -8,6 +8,7 @@ import {
     getCollectionsByUserId,
     getCollectionById,
 } from '@/backend/collections/collections'
+
 import { getTasksByCollectionId } from '@/backend/collections/tasks'
 import { getSubtasksByTaskId } from '@/backend/collections/subtasks'
 
@@ -16,12 +17,12 @@ export default function useGetCollectionsTree() {
     const { showToast } = useToast()
 
     const [loading, setLoading] = useState(false)
-    const [data, setData] = useState<any>([])
+    const [data, setData] = useState<any[]>([])
 
-    /**
-     * INTERNAL: attach subtasks to tasks
-     */
-    const attachSubtasks = async (tasks: any) => {
+    // -------------------------
+    // INTERNAL: attach subtasks
+    // -------------------------
+    const attachSubtasks = async (tasks: any[]) => {
         return Promise.all(
             tasks.map(async (task) => {
                 const res = await getSubtasksByTaskId(task.id)
@@ -34,22 +35,32 @@ export default function useGetCollectionsTree() {
         )
     }
 
-    /**
-     * INTERNAL: attach tasks to collection
-     */
+    // -------------------------
+    // INTERNAL: attach tasks
+    // -------------------------
     const attachTasks = async (collectionId: number) => {
         const res = await getTasksByCollectionId(collectionId)
 
         if (!res.success || !res.data) return []
 
-        const tasksWithSubtasks = await attachSubtasks(res.data)
-
-        return tasksWithSubtasks
+        return attachSubtasks(res.data)
     }
 
-    /**
-     * GET ALL COLLECTIONS BY USER_ID
-     */
+    // -------------------------
+    // INTERNAL: build full tree
+    // -------------------------
+    const buildTree = async (collections: any[]) => {
+        return Promise.all(
+            collections.map(async (collection) => ({
+                ...collection,
+                tasks: await attachTasks(collection.id),
+            }))
+        )
+    }
+
+    // -------------------------
+    // GET ALL COLLECTIONS (BY USER)
+    // -------------------------
     const getByUserId = async (userId?: number) => {
         setLoading(true)
 
@@ -58,19 +69,12 @@ export default function useGetCollectionsTree() {
 
             if (!res.success || !res.data) {
                 showToast(res.message, 'error')
+                Sentry.captureException(res.message)
                 setData([])
                 return
             }
 
-            const collections = res.data
-
-            const tree = await Promise.all(
-                collections.map(async (collection) => ({
-                    ...collection,
-                    tasks: await attachTasks(collection.id),
-                }))
-            )
-
+            const tree = await buildTree(res.data)
             setData(tree)
         } catch (error) {
             Sentry.captureException(error)
@@ -81,14 +85,15 @@ export default function useGetCollectionsTree() {
         }
     }
 
-    /**
-     * GET SINGLE COLLECTION TREE BY ID
-     */
+    // -------------------------
+    // GET SINGLE COLLECTION
+    // -------------------------
     const getByCollectionId = async (collectionId: number) => {
         setLoading(true)
 
         try {
             const res = await getCollectionById(collectionId)
+            console.log(res)
 
             if (!res.success || !res.data) {
                 showToast(res.message, 'error')
@@ -96,11 +101,9 @@ export default function useGetCollectionsTree() {
                 return
             }
 
-            const collection = res.data
-
             const tree = {
-                ...collection,
-                tasks: await attachTasks(collection.id),
+                ...res.data,
+                tasks: await attachTasks(res.data.id),
             }
 
             setData([tree])
@@ -113,6 +116,9 @@ export default function useGetCollectionsTree() {
         }
     }
 
+    // -------------------------
+    // RETURN
+    // -------------------------
     return {
         data,
         loading,
