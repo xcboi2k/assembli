@@ -19,11 +19,13 @@ export const createTask = async (
             }
         }
 
+        const createdAt = new Date().toISOString()
+
         const result = await db.runAsync(
             `INSERT INTO tasks
-             (collection_id, name, status)
+             (collection_id, name, status, created_at)
              VALUES (?, ?, ?)`,
-            [data.collection_id, data.name, data.status || 'pending']
+            [data.collection_id, data.name, data.status || 'pending', createdAt]
         )
 
         return {
@@ -81,7 +83,7 @@ export const updateTaskName = async (
 export const updateTaskStatus = async (
     taskId: number,
     status: string,
-    completed_at: string | null = null
+    completedAt: string | null = null
 ): Promise<AppResponse> => {
     try {
         if (!taskId) {
@@ -103,7 +105,7 @@ export const updateTaskStatus = async (
              SET status = ?,
                  completed_at = ?
              WHERE id = ?`,
-            [status, completed_at, taskId]
+            [status, completedAt, taskId]
         )
 
         if (result.changes === 0) {

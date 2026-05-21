@@ -28,7 +28,9 @@ export const initDB = async () => {
             series TEXT,
             category TEXT,
             category_id INTEGER,
-            procurement_date TEXT
+            procurement_date TEXT,
+            completed_at TEXT DEFAULT NULL,
+            created_at TEXT,
         );
 
         CREATE TABLE IF NOT EXISTS tasks (
@@ -37,6 +39,7 @@ export const initDB = async () => {
             name TEXT,
             status TEXT,
             completed_at TEXT DEFAULT NULL,
+            created_at TEXT,
             FOREIGN KEY (collection_id)
                 REFERENCES collections(id)
                 ON DELETE CASCADE
@@ -47,6 +50,8 @@ export const initDB = async () => {
             task_id INTEGER,
             name TEXT,
             status TEXT,
+            completed_at TEXT DEFAULT NULL,
+            created_at TEXT,
             FOREIGN KEY (task_id)
                 REFERENCES tasks(id)
                 ON DELETE CASCADE

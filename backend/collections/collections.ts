@@ -13,9 +13,11 @@ export const createCollection = async (data: {
     procurement_date: string
 }) => {
     try {
+        const createdAt = new Date().toISOString()
+
         const result = await db.runAsync(
             `INSERT INTO collections
-            (user_id, name, category_id, series, procurement_date)
+            (user_id, name, category_id, series, procurement_date, created_at)
             VALUES (?, ?, ?, ?, ?)`,
             [
                 data.user_id,
@@ -23,6 +25,7 @@ export const createCollection = async (data: {
                 data.category_id,
                 data.series,
                 data.procurement_date,
+                createdAt,
             ]
         )
 
@@ -99,6 +102,58 @@ export const updateCollection = async (data: any): Promise<AppResponse> => {
         }
     } catch (err) {
         return handleDBError(err, 'Update collection')
+    }
+}
+
+export const updateCollectionStatus = async (
+    userId: number,
+    dataId: number,
+    status: string,
+    completedAt: string | null = null
+): Promise<AppResponse> => {
+    try {
+        if (!userId) {
+            return {
+                success: false,
+                message: 'User is required',
+            }
+        }
+
+        if (!dataId) {
+            return {
+                success: false,
+                message: 'Collection item id is required',
+            }
+        }
+
+        if (!status.trim()) {
+            return {
+                success: false,
+                message: 'Collection item status is required',
+            }
+        }
+
+        const result = await db.runAsync(
+            `UPDATE collections
+             SET status = ?,
+                 completed_at = ?
+             WHERE id = ? AND user_id = ?`,
+            [status, completedAt, dataId, userId]
+        )
+
+        if (result.changes === 0) {
+            return {
+                success: false,
+                message: 'Task not found',
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Task status updated',
+        }
+    } catch (err) {
+        return handleDBError(err, 'Update task status')
     }
 }
 

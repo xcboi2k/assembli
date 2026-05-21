@@ -19,11 +19,13 @@ export const createSubtask = async (
             }
         }
 
+        const createdAt = new Date().toISOString()
+
         const result = await db.runAsync(
             `INSERT INTO subtasks
              (task_id, name, status)
              VALUES (?, ?, ?)`,
-            [data.task_id, data.name, data.status || 'pending']
+            [data.task_id, data.name, data.status || 'pending', createdAt]
         )
 
         return {
@@ -80,7 +82,8 @@ export const updateSubtaskName = async (
 
 export const updateSubtaskStatus = async (
     subtaskId: number,
-    status: string
+    status: string,
+    completedAt: string | null = null
 ): Promise<AppResponse> => {
     try {
         if (!subtaskId) {
@@ -101,7 +104,7 @@ export const updateSubtaskStatus = async (
             `UPDATE subtasks
              SET status = ?
              WHERE id = ?`,
-            [status, subtaskId]
+            [status, completedAt, subtaskId]
         )
 
         if (result.changes === 0) {
