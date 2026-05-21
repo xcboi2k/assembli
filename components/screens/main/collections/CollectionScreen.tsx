@@ -22,7 +22,7 @@ export default function CollectionScreen() {
 
     const [activeTab, setActiveTab] = useState('ALL')
 
-    const { getByUserId, data, loading } = useGetCollectionsTree()
+    const { getByUserId, data, analytics, loading } = useGetCollectionsTree()
     console.log('collection data:', data)
 
     useFocusEffect(
@@ -105,6 +105,29 @@ export default function CollectionScreen() {
                                 </View>
                             )}
                         </>
+                    )}
+
+                    {analytics && (
+                        <StatsGrid
+                            stats={[
+                                {
+                                    label: 'TOTAL_COLLECTIONS',
+                                    value: `${analytics?.totalCollections}`,
+                                },
+                                {
+                                    label: 'COMPLETION_RATE',
+                                    value: `${analytics?.overallCompletionRate}`,
+                                },
+                                {
+                                    label: 'COMPLETED_TASKS',
+                                    value: `${analytics?.completedTasks}`,
+                                },
+                                {
+                                    label: 'COMPLETION_SUBTASKS',
+                                    value: `${analytics?.completedSubtasks}`,
+                                },
+                            ]}
+                        />
                     )}
 
                     {/* <CollectionItem

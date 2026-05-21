@@ -12,12 +12,26 @@ import {
 import { getTasksByCollectionId } from '@/backend/collections/tasks'
 import { getSubtasksByTaskId } from '@/backend/collections/subtasks'
 
+type CollectionAnalytics = {
+    totalCollections: number
+    completedCollections: number
+
+    totalTasks: number
+    completedTasks: number
+
+    totalSubtasks: number
+    completedSubtasks: number
+
+    overallCompletionRate: number
+}
+
 export default function useGetCollectionsTree() {
     const user = UserStore((state) => state.user)
     const { showToast } = useToast()
 
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any[]>([])
+    const [analytics, setAnalytics] = useState<CollectionAnalytics | null>(null)
 
     // -------------------------
     // INTERNAL: attach subtasks
@@ -58,6 +72,60 @@ export default function useGetCollectionsTree() {
         )
     }
 
+    const generateCollectionAnalytics = (collections: any[]) => {
+        let totalCollections = collections.length
+        let completedCollections = 0
+
+        let totalTasks = 0
+        let completedTasks = 0
+
+        let totalSubtasks = 0
+        let completedSubtasks = 0
+
+        collections.forEach((collection) => {
+            if (collection.status === 'completed') {
+                completedCollections++
+            }
+
+            collection.tasks?.forEach((task: any) => {
+                totalTasks++
+
+                if (task.status === 'completed') {
+                    completedTasks++
+                }
+
+                task.subtasks?.forEach((subtask: any) => {
+                    totalSubtasks++
+
+                    if (subtask.status === 'completed') {
+                        completedSubtasks++
+                    }
+                })
+            })
+        })
+
+        const totalItems = totalTasks + totalSubtasks
+
+        const completedItems = completedTasks + completedSubtasks
+
+        const overallCompletionRate =
+            totalItems === 0
+                ? 0
+                : Math.round((completedItems / totalItems) * 100)
+
+        return {
+            totalCollections,
+            completedCollections,
+
+            totalTasks,
+            completedTasks,
+
+            totalSubtasks,
+            completedSubtasks,
+
+            overallCompletionRate,
+        }
+    }
     // -------------------------
     // GET ALL COLLECTIONS (BY USER)
     // -------------------------
@@ -75,6 +143,9 @@ export default function useGetCollectionsTree() {
             }
 
             const tree = await buildTree(res.data)
+            const generatedAnalytics = generateCollectionAnalytics(tree)
+
+            setAnalytics(generatedAnalytics)
             setData(tree)
         } catch (error) {
             Sentry.captureException(error)
@@ -124,5 +195,6 @@ export default function useGetCollectionsTree() {
         loading,
         getByUserId,
         getByCollectionId,
+        analytics,
     }
 }
