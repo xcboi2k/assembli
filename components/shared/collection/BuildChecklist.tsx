@@ -8,7 +8,11 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useEffect, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-export default function BuildChecklist({ items, updateRefreshKey }) {
+export default function BuildChecklist({
+    collectionId,
+    items,
+    updateRefreshKey,
+}) {
     const [isEditMode, setIsEditMode] = useState(false)
     console.log('edit', isEditMode)
 
@@ -261,7 +265,9 @@ export default function BuildChecklist({ items, updateRefreshKey }) {
                                                                   key={status}
                                                                   onPress={() => {
                                                                       updateSubtaskStatusRecord(
+                                                                          collectionId,
                                                                           sub.id,
+                                                                          items,
                                                                           status,
                                                                           goToNextScreen
                                                                       )
@@ -407,7 +413,9 @@ export default function BuildChecklist({ items, updateRefreshKey }) {
                                                                   key={status}
                                                                   onPress={() => {
                                                                       updateSubtaskStatusRecord(
+                                                                          collectionId,
                                                                           sub.id,
+                                                                          items,
                                                                           status,
                                                                           goToNextScreen
                                                                       )

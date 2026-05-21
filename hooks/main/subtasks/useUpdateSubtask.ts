@@ -9,6 +9,7 @@ import {
 } from '@/backend/collections/subtasks'
 import { syncTaskStatusFromSubtasks } from '@/helpers/syncTaskStatusFromSubtasks'
 import useUpdateTask from '../tasks/useUpdateTask'
+import { syncCollectionStatus } from '@/helpers/syncCollectionStatus'
 
 export default function useUpdateSubtask() {
     const user = UserStore((state) => state.user)
@@ -43,7 +44,13 @@ export default function useUpdateSubtask() {
         }
     }
 
-    const updateSubtaskStatusRecord = async (id, status, goToNextScreen) => {
+    const updateSubtaskStatusRecord = async (
+        collectionId,
+        id,
+        task,
+        status,
+        goToNextScreen
+    ) => {
         startLoading()
         try {
             const response = await updateSubtaskStatus(Number(id), status)
@@ -57,7 +64,8 @@ export default function useUpdateSubtask() {
             } else {
                 stopLoading()
                 showToast(response.message, 'success')
-                syncTaskStatusFromSubtasks(task)
+                await syncTaskStatusFromSubtasks(task)
+                await syncCollectionStatus(collectionId)
                 goToNextScreen()
             }
         } catch (error) {

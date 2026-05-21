@@ -39,7 +39,6 @@ export default function useUpdateTask() {
     }
 
     const updateTaskStatusRecord = async (id, status, completedDate) => {
-        startLoading()
         try {
             const response = await updateTaskStatus(
                 Number(id),
@@ -48,19 +47,11 @@ export default function useUpdateTask() {
             )
 
             if (!response.success) {
-                stopLoading()
-                showToast(response.message, 'error')
                 Sentry.captureException(
                     `Failed to update task status for ${user?.username ?? 'unknown'}. ${response.message}`
                 )
-            } else {
-                stopLoading()
-                showToast(response.message, 'success')
             }
         } catch (error) {
-            stopLoading()
-            await new Promise((resolve) => setTimeout(resolve, 100))
-            showToast(`Service not available right now.`, 'error')
             Sentry.captureException(
                 `Failed to update task status for ${user?.username ?? 'unknown'}. Service not available right now. ${error}`
             )

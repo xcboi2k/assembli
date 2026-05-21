@@ -169,6 +169,7 @@ export default function CollectionDetailsScreen({ route, navigation }) {
                         <>
                             {collection?.tasks?.length > 0 && (
                                 <BuildChecklist
+                                    collectionId={id}
                                     items={collection.tasks}
                                     updateRefreshKey={() => {
                                         const newKey = Math.random().toString()
