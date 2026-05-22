@@ -1,7 +1,7 @@
 import useUpdateTask from '@/hooks/main/tasks/useUpdateTask'
 import React from 'react'
 
-export async function syncTaskStatusFromSubtasks(task) {
+export async function syncTaskStatusFromSubtasks(task, collectionId) {
     const subtasks = task.subtasks || []
 
     const { updateTaskStatusRecord } = useUpdateTask()
@@ -14,18 +14,23 @@ export async function syncTaskStatusFromSubtasks(task) {
     // ALL COMPLETED
     if (completed === total) {
         const completedDate = new Date().toISOString()
-        updateTaskStatusRecord(task.id, 'COMPLETED', completedDate)
+        updateTaskStatusRecord(
+            task.id,
+            collectionId,
+            'COMPLETED',
+            completedDate
+        )
     }
     // ANY IN PROGRESS
     else if (inProgress > 0) {
-        updateTaskStatusRecord(task.id, 'IN_PROGRESS', null)
+        updateTaskStatusRecord(task.id, collectionId, 'IN_PROGRESS', null)
     }
     // ALL PENDING
     else if (pending === total) {
-        updateTaskStatusRecord(task.id, 'PENDING', null)
+        updateTaskStatusRecord(task.id, collectionId, 'PENDING', null)
     }
     // MIXED (fallback)
     else {
-        updateTaskStatusRecord(task.id, 'PENDING', null)
+        updateTaskStatusRecord(task.id, collectionId, 'PENDING', null)
     }
 }

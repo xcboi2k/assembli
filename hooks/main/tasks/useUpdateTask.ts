@@ -12,10 +12,20 @@ export default function useUpdateTask() {
 
     const { showToast } = useToast()
 
-    const updateTaskNameRecord = async (id, name, goToNextScreen) => {
+    const updateTaskNameRecord = async (
+        id,
+        collectionId,
+        name,
+        goToNextScreen
+    ) => {
         startLoading()
         try {
-            const response = await updateTaskName(Number(id), name)
+            const response = await updateTaskName(
+                Number(user.user_id),
+                Number(id),
+                Number(collectionId),
+                name
+            )
 
             if (!response.success) {
                 stopLoading()
@@ -38,10 +48,17 @@ export default function useUpdateTask() {
         }
     }
 
-    const updateTaskStatusRecord = async (id, status, completedDate) => {
+    const updateTaskStatusRecord = async (
+        id,
+        collectionId,
+        status,
+        completedDate
+    ) => {
         try {
             const response = await updateTaskStatus(
+                Number(user.user_id),
                 Number(id),
+                Number(collectionId),
                 status,
                 completedDate
             )

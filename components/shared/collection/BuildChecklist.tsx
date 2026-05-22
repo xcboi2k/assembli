@@ -111,6 +111,7 @@ export default function BuildChecklist({
                                             onPress={() => {
                                                 updateTaskNameRecord(
                                                     item.id,
+                                                    collectionId,
                                                     taskDraftTitle,
                                                     goToNextScreen
                                                 )
@@ -138,7 +139,11 @@ export default function BuildChecklist({
 
                                     <TouchableOpacity
                                         onPress={() => {
-                                            deleteTask(item.id, goToNextScreen)
+                                            deleteTask(
+                                                item.id,
+                                                collectionId,
+                                                goToNextScreen
+                                            )
                                             setEditingTaskId(null)
                                         }}
                                     >
@@ -192,6 +197,7 @@ export default function BuildChecklist({
                                                               onPress={() => {
                                                                   updateSubtaskNameRecord(
                                                                       sub.id,
+                                                                      item.id,
                                                                       draftSubtaskTitle,
                                                                       goToNextScreen
                                                                   )
@@ -227,6 +233,7 @@ export default function BuildChecklist({
                                                           onPress={() => {
                                                               deleteSubtask(
                                                                   sub.id,
+                                                                  item.id,
                                                                   goToNextScreen
                                                               )
                                                               setEditingSubtaskId(
@@ -266,6 +273,7 @@ export default function BuildChecklist({
                                                                   onPress={() => {
                                                                       updateSubtaskStatusRecord(
                                                                           collectionId,
+                                                                          item.id,
                                                                           sub.id,
                                                                           items,
                                                                           status,
@@ -334,6 +342,7 @@ export default function BuildChecklist({
                                                               onPress={() => {
                                                                   updateSubtaskNameRecord(
                                                                       sub.id,
+                                                                      item.id,
                                                                       draftSubtaskTitle,
                                                                       goToNextScreen
                                                                   )
@@ -369,6 +378,7 @@ export default function BuildChecklist({
                                                           onPress={() => {
                                                               deleteSubtask(
                                                                   sub.id,
+                                                                  item.id,
                                                                   goToNextScreen
                                                               )
                                                               setEditingSubtaskId(
@@ -414,6 +424,7 @@ export default function BuildChecklist({
                                                                   onPress={() => {
                                                                       updateSubtaskStatusRecord(
                                                                           collectionId,
+                                                                          item.id,
                                                                           sub.id,
                                                                           items,
                                                                           status,

@@ -12,10 +12,14 @@ export default function useDeleteTask() {
 
     const { showToast } = useToast()
 
-    const deleteTask = async (id, goToNextScreen) => {
+    const deleteTask = async (id, collectionId, goToNextScreen) => {
         startLoading()
         try {
-            const response = await deleteTaskRecord(Number(id))
+            const response = await deleteTaskRecord(
+                Number(user.user_id),
+                Number(id),
+                Number(collectionId)
+            )
 
             if (!response.success) {
                 stopLoading()

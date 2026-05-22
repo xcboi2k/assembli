@@ -18,10 +18,20 @@ export default function useUpdateSubtask() {
 
     const { showToast } = useToast()
 
-    const updateSubtaskNameRecord = async (id, name, goToNextScreen) => {
+    const updateSubtaskNameRecord = async (
+        id,
+        taskId,
+        name,
+        goToNextScreen
+    ) => {
         startLoading()
         try {
-            const response = await updateSubtaskName(Number(id), name)
+            const response = await updateSubtaskName(
+                Number(user.user_id),
+                Number(taskId),
+                Number(id),
+                name
+            )
 
             if (!response.success) {
                 stopLoading()
@@ -46,6 +56,7 @@ export default function useUpdateSubtask() {
 
     const updateSubtaskStatusRecord = async (
         collectionId,
+        taskId,
         id,
         task,
         status,
@@ -53,7 +64,12 @@ export default function useUpdateSubtask() {
     ) => {
         startLoading()
         try {
-            const response = await updateSubtaskStatus(Number(id), status)
+            const response = await updateSubtaskStatus(
+                Number(user.user_id),
+                Number(taskId),
+                Number(id),
+                status
+            )
 
             if (!response.success) {
                 stopLoading()
@@ -64,7 +80,7 @@ export default function useUpdateSubtask() {
             } else {
                 stopLoading()
                 showToast(response.message, 'success')
-                await syncTaskStatusFromSubtasks(task)
+                await syncTaskStatusFromSubtasks(task, collectionId)
                 await syncCollectionStatus(collectionId)
                 goToNextScreen()
             }
