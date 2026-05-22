@@ -1,5 +1,6 @@
 import { db } from '../db'
 import { AppResponse, handleDBError } from '../error-system'
+import { createHistory } from './session-histories'
 
 export const createSubtask = async (
     data: any
@@ -28,6 +29,13 @@ export const createSubtask = async (
             [data.task_id, data.name, data.status || 'pending', createdAt]
         )
 
+        await createHistory({
+            user_id: data.user_id,
+            task_id: result.lastInsertRowId,
+            action: 'create',
+            details: `Created subtask "${data.name}"`,
+        })
+
         return {
             success: true,
             message: 'Subtask created',
@@ -39,6 +47,8 @@ export const createSubtask = async (
 }
 
 export const updateSubtaskName = async (
+    userId: number,
+    taskId: number,
     subtaskId: number,
     name: string
 ): Promise<AppResponse> => {
@@ -71,6 +81,14 @@ export const updateSubtaskName = async (
             }
         }
 
+        await createHistory({
+            user_id: userId,
+            task_id: taskId,
+            subtask_id: subtaskId,
+            action: 'content_update',
+            details: `Updated task`,
+        })
+
         return {
             success: true,
             message: 'Subtask name updated',
@@ -81,6 +99,8 @@ export const updateSubtaskName = async (
 }
 
 export const updateSubtaskStatus = async (
+    userId: number,
+    taskId: number,
     subtaskId: number,
     status: string,
     completedAt: string | null = null
@@ -114,6 +134,14 @@ export const updateSubtaskStatus = async (
             }
         }
 
+        await createHistory({
+            user_id: userId,
+            task_id: taskId,
+            subtask_id: subtaskId,
+            action: 'status_update',
+            details: `Updated subtask status to "${status}"`,
+        })
+
         return {
             success: true,
             message: 'Subtask status updated',
@@ -124,6 +152,8 @@ export const updateSubtaskStatus = async (
 }
 
 export const deleteSubtask = async (
+    userId: number,
+    taskId: number,
     subtaskId: number
 ): Promise<AppResponse> => {
     try {
@@ -146,6 +176,14 @@ export const deleteSubtask = async (
                 message: 'Subtask not found',
             }
         }
+
+        await createHistory({
+            user_id: userId,
+            subtask_id: subtaskId,
+            task_id: taskId,
+            action: 'delete',
+            details: `Deleted subtask`,
+        })
 
         return {
             success: true,

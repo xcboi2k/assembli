@@ -1,5 +1,6 @@
 import { db } from '../db'
 import { AppResponse, handleDBError } from '../error-system'
+import { createHistory } from './session-histories'
 
 export const createTask = async (
     data: any
@@ -28,6 +29,14 @@ export const createTask = async (
             [data.collection_id, data.name, data.status || 'pending', createdAt]
         )
 
+        await createHistory({
+            user_id: data.user_id,
+            task_id: result.lastInsertRowId,
+            collection_id: data.collection_id,
+            action: 'create',
+            details: `Created task "${data.name}"`,
+        })
+
         return {
             success: true,
             message: 'Task created',
@@ -39,7 +48,9 @@ export const createTask = async (
 }
 
 export const updateTaskName = async (
+    userId: number,
     taskId: number,
+    collectionId: number,
     name: string
 ): Promise<AppResponse> => {
     try {
@@ -71,6 +82,14 @@ export const updateTaskName = async (
             }
         }
 
+        await createHistory({
+            user_id: userId,
+            task_id: taskId,
+            collection_id: collectionId,
+            action: 'content_update',
+            details: `Updated task`,
+        })
+
         return {
             success: true,
             message: 'Task name updated',
@@ -81,6 +100,8 @@ export const updateTaskName = async (
 }
 
 export const updateTaskStatus = async (
+    userId: number,
+    collectionId: number,
     taskId: number,
     status: string,
     completedAt: string | null = null
@@ -115,6 +136,14 @@ export const updateTaskStatus = async (
             }
         }
 
+        await createHistory({
+            user_id: userId,
+            task_id: taskId,
+            collection_id: collectionId,
+            action: 'status_update',
+            details: `Updated task status to "${status}"`,
+        })
+
         return {
             success: true,
             message: 'Task status updated',
@@ -124,7 +153,11 @@ export const updateTaskStatus = async (
     }
 }
 
-export const deleteTask = async (taskId: number): Promise<AppResponse> => {
+export const deleteTask = async (
+    userId: number,
+    taskId: number,
+    collectionId: number
+): Promise<AppResponse> => {
     try {
         const result = await db.runAsync(`DELETE FROM tasks WHERE id = ?`, [
             taskId,
@@ -136,6 +169,14 @@ export const deleteTask = async (taskId: number): Promise<AppResponse> => {
                 message: 'Task not found',
             }
         }
+
+        await createHistory({
+            user_id: userId,
+            task_id: taskId,
+            collection_id: collectionId,
+            action: 'delete',
+            details: `Deleted task`,
+        })
 
         return {
             success: true,

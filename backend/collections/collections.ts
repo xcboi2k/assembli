@@ -4,6 +4,7 @@ import {
     DeleteScopeBreakdown,
     handleDBError,
 } from '../error-system'
+import { createHistory } from './session-histories'
 
 export const createCollection = async (data: {
     user_id: number
@@ -35,6 +36,13 @@ export const createCollection = async (data: {
             `SELECT * FROM collections WHERE id = ?`,
             [insertedId]
         )
+
+        await createHistory({
+            user_id: data.user_id,
+            collection_id: insertedId,
+            action: 'create',
+            details: `Created collection "${data.name}"`,
+        })
 
         return {
             success: true,
@@ -96,6 +104,13 @@ export const updateCollection = async (data: any): Promise<AppResponse> => {
             }
         }
 
+        await createHistory({
+            user_id: data.user_id,
+            collection_id: data.id,
+            action: 'content_update',
+            details: `Updated collection "${data.name}"`,
+        })
+
         return {
             success: true,
             message: 'Collection updated',
@@ -147,6 +162,13 @@ export const updateCollectionStatus = async (
                 message: 'Task not found',
             }
         }
+
+        await createHistory({
+            user_id: userId,
+            collection_id: dataId,
+            action: 'status_update',
+            details: `Updated collection status to "${status}`,
+        })
 
         return {
             success: true,
@@ -219,6 +241,13 @@ export const deleteCollection = async (
                 message: 'Collection not found',
             }
         }
+
+        await createHistory({
+            user_id: data.user_id,
+            collection_id: data.id,
+            action: 'delete',
+            details: `Deleted collection`,
+        })
 
         const breakdown: DeleteScopeBreakdown = {
             removed: {

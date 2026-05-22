@@ -56,6 +56,26 @@ export const initDB = async () => {
                 REFERENCES tasks(id)
                 ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS session_histories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            collection_id INTEGER,
+            task_id INTEGER,
+            subtask_id INTEGER,
+            category_id INTEGER,
+
+            action TEXT NOT NULL,
+            details TEXT NOT NULL,
+
+            created_at TEXT NOT NULL,
+
+            FOREIGN KEY (user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE
+        );
     `)
 
     // ensure schema migration (safe, idempotent)
