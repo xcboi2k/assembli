@@ -1,25 +1,34 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
-import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/core'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import React from 'react'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 import Header from '@/components/shared/Header'
+import { SettingsParamList } from '@/navigation/types'
 
 export default function ProfileMenuScreen() {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<SettingsParamList>>()
+
     const menuItems = [
         {
             icon: 'user',
             title: 'PROFILE_ACCESS',
             subtitle: 'VIEW OPERATOR DATA',
+            onPress: () => navigation.navigate('Profile'),
         },
         {
             icon: 'lock',
             title: 'PASSWORD_OVERRIDE',
             subtitle: 'UPDATE SECURITY CREDENTIALS',
+            onPress: () => navigation.navigate('ChangePassword'),
         },
         {
             icon: 'bell',
             title: 'NOTIFICATION_MATRIX',
             subtitle: 'SYSTEM ALERTS AND TELEMETRY',
+            onPress: () => navigation.navigate('Notifications'),
         },
     ]
 
@@ -50,7 +59,7 @@ export default function ProfileMenuScreen() {
                                 icon={item.icon as any}
                                 title={item.title}
                                 subtitle={item.subtitle}
-                                onPress={() => console.log(item.title)}
+                                onPress={item.onPress}
                             />
                         ))}
                         <SystemMenuItem

@@ -29,6 +29,14 @@ export type MainTabParamList = {
     Categories: undefined
 }
 
+export type SettingsParamList = {
+    ProfileMenu: undefined
+    Profile: undefined
+    ChangePassword: undefined
+    Notifications: undefined
+    Logout: undefined
+}
+
 export type RootStackParamList = {
     Auth: undefined
     Main: undefined

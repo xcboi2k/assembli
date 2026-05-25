@@ -1,10 +1,17 @@
 import { Entypo, Feather, FontAwesome } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/core'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { colors } from '@/constants/themes'
+import { SettingsParamList } from '@/navigation/types'
 
 export default function Header({ title, variant = 'default' }) {
+    const navigation =
+        useNavigation<
+            NativeStackNavigationProp<SettingsParamList, 'ProfileMenu'>
+        >()
     return (
         <View className="w-full justify-center relative py-2 mt-10 bg-[#1A1C1E] border border-b-[#414755]">
             <View className="flex-row items-center justify-between px-4 py-2">
@@ -33,7 +40,7 @@ export default function Header({ title, variant = 'default' }) {
                     </Text>
                     {/* COG ICON */}
                     <TouchableOpacity
-                    // onPress={onPressSettings}
+                        onPress={() => navigation.navigate('ProfileMenu')}
                     >
                         {variant === 'default' ? (
                             <FontAwesome name="cog" size={20} color="#8B90A0" />
