@@ -21,6 +21,14 @@ import * as SQLite from 'expo-sqlite'
 import { RootNavigator } from '@/navigation'
 import { ToastProvider } from './providers/ToastProvider'
 import { db, initDB } from './backend/db'
+import {
+    Entypo,
+    Feather,
+    FontAwesome,
+    Ionicons,
+    MaterialCommunityIcons,
+    MaterialIcons,
+} from '@expo/vector-icons'
 
 Sentry.init({
     dsn: 'https://1973f8127c62cdd92a976f6ec20f9d91@o4511221589475328.ingest.us.sentry.io/4511374275051520',
@@ -40,6 +48,12 @@ export default Sentry.wrap(function App() {
         Inter_400Regular,
         Inter_500Medium,
         Inter_600SemiBold,
+        ...Ionicons.font,
+        ...MaterialIcons.font,
+        ...Feather.font,
+        ...Entypo.font,
+        ...FontAwesome.font,
+        ...MaterialCommunityIcons.font,
     })
 
     useEffect(() => {
@@ -59,9 +73,13 @@ export default Sentry.wrap(function App() {
     }, [])
 
     useEffect(() => {
-        if (loaded || error) {
-            SplashScreen.hideAsync()
+        async function hideSplash() {
+            if (loaded || error) {
+                await SplashScreen.hideAsync()
+            }
         }
+
+        hideSplash()
     }, [loaded, error])
 
     if (!loaded && !error) {
