@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/core'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+
+import { SettingsParamList } from '@/navigation/types'
+import UserStore from '@/stores/UserStore'
 
 export const LogoutScreen = () => {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<SettingsParamList>>()
+
+    const setLoggedOut = UserStore((state) => state.setLoggedOut)
+    const handleLogout = () => {
+        console.log('Logging out...')
+        setLoggedOut()
+    }
+
     return (
         <View className="flex-1 bg-[#0F1113] p-4">
             {/* PANEL */}
@@ -31,7 +45,10 @@ export const LogoutScreen = () => {
                 {/* ACTIONS */}
                 <View className="flex-row mt-8">
                     {/* CANCEL */}
-                    <TouchableOpacity className="flex-1 border border-[#334155] py-4 items-center mr-2">
+                    <TouchableOpacity
+                        className="flex-1 border border-[#334155] py-4 items-center mr-2"
+                        onPress={() => navigation.navigate('ProfileMenu')}
+                    >
                         <View className="flex-row items-center">
                             <Feather
                                 name="arrow-left"
@@ -46,7 +63,10 @@ export const LogoutScreen = () => {
                     </TouchableOpacity>
 
                     {/* LOGOUT */}
-                    <TouchableOpacity className="flex-1 bg-red-500/90 py-4 items-center ml-2">
+                    <TouchableOpacity
+                        className="flex-1 bg-red-500/90 py-4 items-center ml-2"
+                        onPress={handleLogout}
+                    >
                         <View className="flex-row items-center">
                             <Feather name="power" size={16} color="#FFFFFF" />
 

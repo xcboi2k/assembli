@@ -1,15 +1,21 @@
-import { Feather } from '@expo/vector-icons'
+import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/core'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import {
+    createNativeStackNavigator,
+    NativeStackNavigationProp,
+} from '@react-navigation/native-stack'
 import React from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 import Header from '@/components/shared/Header'
-import { SettingsParamList } from '@/navigation/types'
+import { MainTabParamList, SettingsParamList } from '@/navigation/types'
 
 export default function ProfileMenuScreen() {
     const navigation =
         useNavigation<NativeStackNavigationProp<SettingsParamList>>()
+
+    const dashboardNavigation =
+        useNavigation<NativeStackNavigationProp<MainTabParamList>>()
 
     const menuItems = [
         {
@@ -29,6 +35,12 @@ export default function ProfileMenuScreen() {
             title: 'NOTIFICATION_MATRIX',
             subtitle: 'SYSTEM ALERTS AND TELEMETRY',
             onPress: () => navigation.navigate('Notifications'),
+        },
+        {
+            icon: 'dashboard',
+            title: 'RETURN_TO_DASHBOARD',
+            subtitle: '',
+            onPress: () => dashboardNavigation.navigate('Dashboard'),
         },
     ]
 
@@ -67,7 +79,7 @@ export default function ProfileMenuScreen() {
                             title="SYSTEM_LOGOUT"
                             subtitle="TERMINATE ACTIVE SESSION"
                             danger
-                            onPress={() => console.log('LOGOUT')}
+                            onPress={() => navigation.navigate('Logout')}
                         />
                     </View>
                 </ScrollView>
@@ -77,7 +89,7 @@ export default function ProfileMenuScreen() {
 }
 
 type MenuItemProps = {
-    icon: keyof typeof Feather.glyphMap
+    icon: any
     title: string
     subtitle: string
     onPress?: () => void
@@ -109,11 +121,19 @@ export const SystemMenuItem = ({
                                 : 'border-[#334155] bg-[#0F172A]'
                         }`}
                     >
-                        <Feather
-                            name={icon}
-                            size={18}
-                            color={danger ? '#F87171' : '#ADC6FF'}
-                        />
+                        {icon === 'dashboard' ? (
+                            <MaterialIcons
+                                name={icon}
+                                size={18}
+                                color={danger ? '#F87171' : '#ADC6FF'}
+                            />
+                        ) : (
+                            <Feather
+                                name={icon}
+                                size={18}
+                                color={danger ? '#F87171' : '#ADC6FF'}
+                            />
+                        )}
                     </View>
 
                     {/* TEXT */}
