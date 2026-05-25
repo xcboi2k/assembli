@@ -51,6 +51,9 @@ export default function CustomTextInput({
     hasStatus = false,
     statusText,
 }: CustomTextInputProps) {
+    const isReview = variant === 'review'
+    const isPassword = variant === 'password'
+
     const iconMap: Record<Variant, string> = {
         email: 'mail',
         password: 'lock',
@@ -107,12 +110,10 @@ export default function CustomTextInput({
                 )}
                 <TextInput
                     {...inputProps}
-                    multiline={variant === 'review'}
-                    textAlignVertical={variant === 'review' ? 'top' : 'center'}
+                    multiline={isReview}
+                    textAlignVertical={isReview ? 'top' : 'center'}
                     className="text-body text-[16px] text-[#8B90A0]"
-                    secureTextEntry={
-                        variant === 'password' && !isPasswordVisible
-                    }
+                    secureTextEntry={isPassword && !isPasswordVisible}
                     placeholderTextColor="#8B90A0"
                 />
                 {variant === 'password' && (
