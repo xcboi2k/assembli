@@ -34,13 +34,13 @@ export default function SearchBar({
 
     const debounceRef = useRef<any>(null)
 
-    const runFilters = async (value: string, tab?: number | null) => {
+    const runFilters = async (value: string, tab: number | null) => {
         try {
             setLoading(true)
 
             await onChange({
                 search: value,
-                activeTab: tab ? tab : 1,
+                activeTab: tab,
             })
         } finally {
             setLoading(false)
@@ -61,9 +61,9 @@ export default function SearchBar({
                 clearTimeout(debounceRef.current)
             }
         }
-    }, [search, activeTab])
+    }, [search, activeTab, debounceMs, onChange])
 
-    const handleClear = async () => {
+    const handleClear = () => {
         setSearch('')
     }
 
@@ -72,11 +72,12 @@ export default function SearchBar({
             clearTimeout(debounceRef.current)
         }
 
-        await runFilters(search)
+        await runFilters(search, activeTab)
     }
 
     return (
         <>
+            {/* SEARCH BAR */}
             <View className="w-full px-4 py-2 bg-[#1A1C1E] border border-[#1E293B] flex-row items-center">
                 <Feather name="search" size={18} color="#64748B" />
 
@@ -92,12 +93,17 @@ export default function SearchBar({
                 {loading ? (
                     <ActivityIndicator size="small" color="#64748B" />
                 ) : search.length > 0 ? (
-                    <TouchableOpacity onPress={handleClear} className="ml-2">
+                    <TouchableOpacity
+                        testID="clear-button"
+                        onPress={handleClear}
+                        className="ml-2"
+                    >
                         <Feather name="x" size={18} color="#64748B" />
                     </TouchableOpacity>
                 ) : null}
 
                 <TouchableOpacity
+                    testID="manual-search-button"
                     onPress={handleManualSearch}
                     className="ml-3 px-3 py-2 bg-[#2563EB] rounded-lg"
                 >
@@ -105,11 +111,15 @@ export default function SearchBar({
                 </TouchableOpacity>
             </View>
 
+            {/* TABS */}
             <View className="flex-row mb-4">
                 {loadingCategories ? (
                     <>
                         {[1, 2, 3].map((item) => (
-                            <Skeleton style="w-[80px] h-[10px] rounded" />
+                            <Skeleton
+                                key={item}
+                                style="w-[80px] h-[10px] rounded"
+                            />
                         ))}
                     </>
                 ) : (

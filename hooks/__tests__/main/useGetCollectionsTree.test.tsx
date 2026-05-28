@@ -80,7 +80,10 @@ describe('useGetCollectionsTree', () => {
             await result.current.getByUserId(1)
         })
 
-        expect(getCollectionsByUserId).toHaveBeenCalledWith(1)
+        expect(getCollectionsByUserId).toHaveBeenCalledWith(1, {
+            search: undefined,
+            category_id: undefined,
+        })
         expect(result.current.data.length).toBe(2)
         expect(result.current.analytics).not.toBeNull()
     })
