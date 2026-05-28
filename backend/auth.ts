@@ -12,6 +12,11 @@ type AuthResponse = {
     } | null
 }
 
+type ChangePasswordResponse = {
+    success: boolean
+    message: string
+}
+
 bcrypt.setRandomFallback((len) => {
     const chars =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -188,5 +193,72 @@ export const getCurrentUser = async () => {
         return user ? JSON.parse(user) : null
     } catch (error) {
         return null
+    }
+}
+
+export const changePassword = async (
+    userId: number,
+    currentPassword: string,
+    newPassword: string
+): Promise<ChangePasswordResponse> => {
+    try {
+        if (!currentPassword.trim() || !newPassword.trim()) {
+            return {
+                success: false,
+                message: 'All fields are required',
+            }
+        }
+
+        if (newPassword.length < 6) {
+            return {
+                success: false,
+                message: 'New password must be at least 6 characters',
+            }
+        }
+
+        // 1. Get user
+        const user: any = await db.getFirstAsync(
+            `SELECT * FROM users WHERE id = ?`,
+            [userId]
+        )
+
+        if (!user) {
+            return {
+                success: false,
+                message: 'User not found',
+            }
+        }
+
+        // 2. Verify current password
+        const isMatch = await bcrypt.compare(currentPassword, user.password)
+
+        if (!isMatch) {
+            return {
+                success: false,
+                message: 'Current password is incorrect',
+            }
+        }
+
+        // 3. Hash new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+
+        // 4. Update DB
+        await db.runAsync(
+            `UPDATE users
+             SET password = ?
+             WHERE id = ?`,
+            [hashedNewPassword, userId]
+        )
+
+        return {
+            success: true,
+            message: 'Password updated successfully',
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            message: 'Something went wrong',
+        }
     }
 }

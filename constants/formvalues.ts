@@ -13,4 +13,9 @@ export const INITIAL_VALUES = {
         categoryName: '',
         categoryDescription: '',
     },
+    CHANGE_PASSWORD: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+    },
 }
