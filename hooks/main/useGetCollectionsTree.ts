@@ -25,6 +25,25 @@ type CollectionAnalytics = {
     overallCompletionRate: number
 }
 
+type ProfileAnalytics = {
+    totalCollections: number
+    completedCollections: number
+
+    totalTasks: number
+    completedTasks: number
+
+    totalSubtasks: number
+    completedSubtasks: number
+
+    totalCycles: number
+    completedCycles: number
+
+    backlogDepth: number
+
+    buildCompletionRate: number
+    efficiencyRating: number
+}
+
 export default function useGetCollectionsTree() {
     const user = UserStore((state) => state.user)
     const { showToast } = useToast()
@@ -32,6 +51,8 @@ export default function useGetCollectionsTree() {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any[]>([])
     const [analytics, setAnalytics] = useState<CollectionAnalytics | null>(null)
+    const [profileAnalytics, setProfileAnalytics] =
+        useState<ProfileAnalytics | null>(null)
 
     // -------------------------
     // INTERNAL: attach subtasks
@@ -126,6 +147,75 @@ export default function useGetCollectionsTree() {
             overallCompletionRate,
         }
     }
+
+    const generateProfileAnalytics = (collections: any[]): ProfileAnalytics => {
+        let totalCollections = collections.length
+        let completedCollections = 0
+
+        let totalTasks = 0
+        let completedTasks = 0
+
+        let totalSubtasks = 0
+        let completedSubtasks = 0
+
+        for (const collection of collections) {
+            if (collection.status === 'completed') {
+                completedCollections++
+            }
+
+            for (const task of collection.tasks ?? []) {
+                totalTasks++
+
+                if (task.status === 'completed') {
+                    completedTasks++
+                }
+
+                for (const subtask of task.subtasks ?? []) {
+                    totalSubtasks++
+
+                    if (subtask.status === 'completed') {
+                        completedSubtasks++
+                    }
+                }
+            }
+        }
+
+        const totalCycles = totalTasks + totalSubtasks
+        const completedCycles = completedTasks + completedSubtasks
+
+        const backlogDepth =
+            totalTasks - completedTasks + (totalSubtasks - completedSubtasks)
+
+        const buildCompletionRate =
+            totalCollections === 0
+                ? 0
+                : Math.round((completedCollections / totalCollections) * 100)
+
+        const efficiencyRating =
+            totalCycles === 0
+                ? 0
+                : Math.round((completedCycles / totalCycles) * 100)
+
+        return {
+            totalCollections,
+            completedCollections,
+
+            totalTasks,
+            completedTasks,
+
+            totalSubtasks,
+            completedSubtasks,
+
+            totalCycles,
+            completedCycles,
+
+            backlogDepth,
+
+            buildCompletionRate,
+            efficiencyRating,
+        }
+    }
+
     // -------------------------
     // GET ALL COLLECTIONS (BY USER)
     // -------------------------
@@ -193,6 +283,35 @@ export default function useGetCollectionsTree() {
             setLoading(false)
         }
     }
+    // -------------------------
+    // GET ALL COLLECTIONS (BY USER)
+    // -------------------------
+    const getByUserIdForProfile = async (userId?: number) => {
+        setLoading(true)
+
+        try {
+            const res = await getCollectionsByUserId(userId ?? user?.id)
+
+            if (!res.success || !res.data) {
+                showToast(res.message, 'error')
+                Sentry.captureException(res.message)
+                setData([])
+                return
+            }
+
+            const tree = await buildTree(res.data)
+            const profileAnalytics = generateProfileAnalytics(tree)
+
+            setProfileAnalytics(profileAnalytics)
+            setData(tree)
+        } catch (error) {
+            Sentry.captureException(error)
+            showToast('Service not available right now.', 'error')
+            setData([])
+        } finally {
+            setLoading(false)
+        }
+    }
 
     // -------------------------
     // RETURN
@@ -202,6 +321,8 @@ export default function useGetCollectionsTree() {
         loading,
         getByUserId,
         getByCollectionId,
+        getByUserIdForProfile,
         analytics,
+        profileAnalytics,
     }
 }
