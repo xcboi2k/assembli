@@ -132,14 +132,14 @@ export default function useGetCollectionsTree() {
     const getByUserId = async (
         userId?: number,
         searchText?: string,
-        categoryId?: number
+        categoryId?: number | null
     ) => {
         setLoading(true)
 
         try {
             const res = await getCollectionsByUserId(userId ?? user?.id, {
                 search: searchText,
-                category_id: categoryId,
+                category_id: categoryId ? categoryId : undefined,
             })
 
             if (!res.success || !res.data) {

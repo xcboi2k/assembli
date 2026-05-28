@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -8,33 +8,41 @@ import SearchBar from '@/components/shared/collection/SearchBar'
 import FilterTabs from '@/components/shared/collection/FilterTabs'
 import CollectionItem from '@/components/shared/collection/CollectionItem'
 import StatsGrid from '@/components/shared/collection/StatsGrid'
-
 import { CollectionsStackParamList } from '@/navigation'
 import useGetCollectionItems from '@/hooks/main/collections/useGetCollectionItems'
 import { useRefresh } from '@/hooks/useRefresh'
 import CollectionSkeleton from '@/components/skeletons/CollectionSkeleton'
 import useGetCollectionsTree from '@/hooks/main/useGetCollectionsTree'
 import { computeBuildProgress } from '@/helpers/computeBuildProgress'
+import UserStore from '@/stores/UserStore'
+import useGetCategories from '@/hooks/main/categories/useGetCategories'
 
 export default function CollectionScreen() {
     const navigation =
         useNavigation<NativeStackNavigationProp<CollectionsStackParamList>>()
 
-    const [activeTab, setActiveTab] = useState('ALL')
-
+    const user = UserStore((state) => state.user)
     const { getByUserId, data, analytics, loading } = useGetCollectionsTree()
     console.log('collection data:', data)
+    const {
+        categories,
+        loading: loadingCategories,
+        fetchCategories,
+    } = useGetCategories()
 
     useFocusEffect(
         useCallback(() => {
             console.log('Mount Collection')
             getByUserId()
+            fetchCategories()
 
             return () => {
                 console.log('Unmount Collection')
             }
         }, [])
     )
+
+    const [activeTab, setActiveTab] = useState<number | null>(null)
 
     const handleNavigation = (id) =>
         navigation.navigate('CollectionDetails', id)
@@ -58,12 +66,23 @@ export default function CollectionScreen() {
                         <>
                             {data?.length ? (
                                 <>
-                                    <SearchBar />
-
-                                    <FilterTabs
-                                        active={activeTab}
-                                        setActive={setActiveTab}
+                                    <SearchBar
+                                        tabs={categories}
+                                        activeTab={activeTab}
+                                        setActiveTab={setActiveTab}
+                                        onChange={async ({
+                                            search,
+                                            activeTab,
+                                        }) =>
+                                            getByUserId(
+                                                user.id,
+                                                search,
+                                                activeTab
+                                            )
+                                        }
+                                        loadingCategories={loadingCategories}
                                     />
+
                                     {data?.map((item, index) => (
                                         <CollectionItem
                                             key={index}
