@@ -276,7 +276,11 @@ export const deleteCollection = async (
 }
 
 export const getCollectionsByUserId = async (
-    userId: number
+    userId: number,
+    options?: {
+        search?: string
+        category_id?: number
+    }
 ): Promise<AppResponse<any[]>> => {
     try {
         if (userId == null || Number.isNaN(Number(userId))) {
@@ -286,10 +290,40 @@ export const getCollectionsByUserId = async (
             }
         }
 
-        const rows = await db.getAllAsync(
-            `SELECT * FROM collections WHERE user_id = ? ORDER BY id DESC`,
-            [userId]
-        )
+        let query = `
+            SELECT *
+            FROM collections
+            WHERE user_id = ?
+        `
+
+        const params: any[] = [userId]
+
+        // search by name or series
+        if (options?.search?.trim()) {
+            query += `
+                AND (
+                    name LIKE ?
+                    OR series LIKE ?
+                )
+            `
+
+            const searchValue = `%${options.search.trim()}%`
+
+            params.push(searchValue, searchValue)
+        }
+
+        // filter by category
+        if (options?.category_id) {
+            query += `
+                AND category_id = ?
+            `
+
+            params.push(options.category_id)
+        }
+
+        query += ` ORDER BY id DESC`
+
+        const rows = await db.getAllAsync(query, params)
 
         return {
             success: true,

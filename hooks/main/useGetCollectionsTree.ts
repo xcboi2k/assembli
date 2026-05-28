@@ -129,11 +129,18 @@ export default function useGetCollectionsTree() {
     // -------------------------
     // GET ALL COLLECTIONS (BY USER)
     // -------------------------
-    const getByUserId = async (userId?: number) => {
+    const getByUserId = async (
+        userId?: number,
+        searchText?: string,
+        categoryId?: number
+    ) => {
         setLoading(true)
 
         try {
-            const res = await getCollectionsByUserId(userId ?? user?.id)
+            const res = await getCollectionsByUserId(userId ?? user?.id, {
+                search: searchText,
+                category_id: categoryId,
+            })
 
             if (!res.success || !res.data) {
                 showToast(res.message, 'error')
