@@ -30,12 +30,12 @@ export default function ProfileMenuScreen() {
             subtitle: 'UPDATE SECURITY CREDENTIALS',
             onPress: () => navigation.navigate('ChangePassword'),
         },
-        {
-            icon: 'bell',
-            title: 'NOTIFICATION_MATRIX',
-            subtitle: 'SYSTEM ALERTS AND TELEMETRY',
-            onPress: () => navigation.navigate('Notifications'),
-        },
+        // {
+        //     icon: 'bell',
+        //     title: 'NOTIFICATION_MATRIX',
+        //     subtitle: 'SYSTEM ALERTS AND TELEMETRY',
+        //     onPress: () => navigation.navigate('Notifications'),
+        // },
         {
             icon: 'dashboard',
             title: 'RETURN_TO_DASHBOARD',
