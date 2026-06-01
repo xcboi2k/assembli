@@ -79,27 +79,30 @@ export default function DashboardScreen() {
                             badgeText="100% COMPLETE"
                         />
                     )}
-                    <Heatmap
-                        title="BUILD_ACTIVITY_LOG"
-                        data={analytics?.heatMapData}
-                        maxValue={4}
-                    />
-
-                    <View className="w-full flex-row justify-between mb-4">
-                        <StatCard
-                            label="ACQUIRED"
-                            value={analytics?.stats.acquired}
+                    {analytics?.heatMapData && (
+                        <Heatmap
+                            title="BUILD_ACTIVITY_LOG"
+                            data={analytics?.heatMapData}
+                            maxValue={4}
                         />
-                        <StatCard
-                            label="ONGOING"
-                            value={analytics?.stats.ongoing}
-                            highlight
-                        />
-                        <StatCard
-                            label="COMPLETED"
-                            value={analytics?.stats.completed}
-                        />
-                    </View>
+                    )}
+                    {analytics?.stats && (
+                        <View className="w-full flex-row justify-between mb-4">
+                            <StatCard
+                                label="ACQUIRED"
+                                value={analytics?.stats.acquired}
+                            />
+                            <StatCard
+                                label="ONGOING"
+                                value={analytics?.stats.ongoing}
+                                highlight
+                            />
+                            <StatCard
+                                label="COMPLETED"
+                                value={analytics?.stats.completed}
+                            />
+                        </View>
+                    )}
 
                     {/* <Section title="UPCOMING_TASKS" showAdd>
                         <TaskItem

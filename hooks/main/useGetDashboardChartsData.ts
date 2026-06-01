@@ -147,26 +147,21 @@ export default function useGetDashboardChartsData() {
         // -------------------------
         // Stats (NEW)
         // -------------------------
+        const stats = {
+            acquired: data.length, // collections
+            ongoing: 0,
+            completed: 0,
+        }
+
         const allTasks = data.flatMap((c) => c.tasks ?? [])
 
-        const stats = allTasks.reduce(
-            (acc, task) => {
-                if (task.status === 'COMPLETED') {
-                    acc.completed += 1
-                } else if (task.status === 'IN_PROGRESS') {
-                    acc.ongoing += 1
-                } else {
-                    acc.acquired += 1
-                }
-
-                return acc
-            },
-            {
-                acquired: 0,
-                ongoing: 0,
-                completed: 0,
+        allTasks.forEach((task) => {
+            if (task.status === 'COMPLETED') {
+                stats.completed += 1
+            } else if (task.status === 'IN_PROGRESS') {
+                stats.ongoing += 1
             }
-        )
+        })
 
         return {
             highest,
