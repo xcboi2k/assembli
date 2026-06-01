@@ -30,7 +30,7 @@ export const initDB = async () => {
             category_id INTEGER,
             procurement_date TEXT,
             completed_at TEXT DEFAULT NULL,
-            created_at TEXT,
+            created_at TEXT
         );
 
         CREATE TABLE IF NOT EXISTS tasks (
