@@ -25,7 +25,7 @@ export const createTask = async (
         const result = await db.runAsync(
             `INSERT INTO tasks
              (collection_id, name, status, created_at)
-             VALUES (?, ?, ?)`,
+             VALUES (?, ?, ?, ?)`,
             [data.collection_id, data.name, data.status || 'pending', createdAt]
         )
 

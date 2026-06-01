@@ -19,7 +19,7 @@ export const createCollection = async (data: {
         const result = await db.runAsync(
             `INSERT INTO collections
             (user_id, name, category_id, series, procurement_date, created_at)
-            VALUES (?, ?, ?, ?, ?)`,
+            VALUES (?, ?, ?, ?, ?, ?)`,
             [
                 data.user_id,
                 data.name,
